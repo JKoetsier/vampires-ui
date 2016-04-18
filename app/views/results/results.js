@@ -94,37 +94,5 @@ angular.module('myApp.results', ['ngRoute'])
             });
 
         });
-
-        //$scope.data = generateData(4,40);
-
-        //console.log($scope.data);
-        //
-        ///* Random Data Generator (took from nvd3.org) */
-        //function generateData(groups, points) {
-        //    var data = [],
-        //        shapes = ['circle', 'cross', 'triangle-up', 'triangle-down', 'diamond', 'square'],
-        //        random = d3.random.normal();
-        //
-        //    for (var i = 0; i < groups; i++) {
-        //        data.push({
-        //            key: 'Group ' + i,
-        //            values: []
-        //        });
-        //
-        //        for (var j = 0; j < points; j++) {
-        //            data[i].values.push({
-        //                x: random()
-        //                , y: random()
-        //                , size: Math.random()
-        //                , shape: shapes[j % 6]
-        //            });
-        //        }
-        //    }
-        //    return data;
-        //}
-
-
-
-
-
+        
     }]);
