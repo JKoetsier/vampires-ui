@@ -10,8 +10,10 @@ angular.module('myApp.config', ['ngRoute'])
         });
     }])
 
-    .controller('ConfigController', ['$scope', function($scope) {
+    .controller('ConfigController', ['$scope', 'ApiClientService', function($scope, ApiClientService) {
         $scope.taskType = 'file';
         $scope.sequenceStart = 0;
         $scope.sequenceStop = 100;
+
+        ApiClientService.getProviders();
     }]);

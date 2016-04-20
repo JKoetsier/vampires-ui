@@ -7,7 +7,8 @@ angular.module('myApp', [
   'myApp.config',
   'myApp.progress',
   'myApp.results',
-  'myApp.execute'
+  'myApp.execute',
+  'myApp.api_client'
 ]).
 
 config(['$routeProvider', function($routeProvider) {
