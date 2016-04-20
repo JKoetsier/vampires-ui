@@ -1,23 +1,59 @@
-<form class="form-horizontal">
+<form class="form-horizontal config">
     <div class="form-group">
-        <label for="parameter1" class="col-sm-2 control-label">Parameter 1</label>
+        <label for="description" class="col-sm-2 control-label">Description</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="parameter1" placeholder="Parameter 1">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="parameter2" class="col-sm-2 control-label">Parameter 2</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="parameter2" placeholder="Parameter 2">
+            <input type="text" class="form-control" id="description" placeholder="Description.." ng-model="description">
         </div>
     </div>
 
     <div class="form-group">
-        <label for="file" class="col-sm-2 control-label">Test script</label>
+        <label for="sequenceStart" class="col-sm-2 control-label">Sequence Start</label>
+        <div class="col-sm-10">
+            <input type="number" class="form-control" id="sequenceStart" placeholder="Sequence Start" ng-model="sequenceStart">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sequenceStop" class="col-sm-2 control-label">Sequence Stop</label>
+        <div class="col-sm-10">
+            <input type="number" class="form-control" id="sequenceStop" placeholder="Sequence Stop" ng-model="sequenceStop">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-2 control-label">
+            <p>Task Type</p>
+        </div>
+        <div class="col-sm-10">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="taskType" id="taskTypeFile" value="file" checked ng-model="taskType">
+                    File
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="taskType" id="taskTypeText" value="text" ng-model="taskType">
+                    Text
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" ng-show="taskType == 'file'">
+        <label for="taskFile" class="col-sm-2 control-label">Task</label>
         <div class="col-sm-10">
             <span class="btn btn-default btn-file">
-                Browse <input type="file" class="form-control" id="file" placeholder="File">
+                Browse <input type="file" class="form-control" id="taskFile" placeholder="taskFile">
             </span>
+        </div>
+    </div>
+
+    <div class="form-group" ng-show="taskType == 'text'">
+        <label for="taskFile" class="col-sm-2 control-label">Task</label>
+        <div class="col-sm-10">
+
+            <textarea rows="10" class="form-control" id="taskText" placeholder="Task"></textarea>
 
         </div>
     </div>

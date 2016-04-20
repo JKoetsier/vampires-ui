@@ -10,6 +10,8 @@ angular.module('myApp.config', ['ngRoute'])
         });
     }])
 
-    .controller('ConfigController', [function() {
-
+    .controller('ConfigController', ['$scope', function($scope) {
+        $scope.taskType = 'file';
+        $scope.sequenceStart = 0;
+        $scope.sequenceStop = 100;
     }]);

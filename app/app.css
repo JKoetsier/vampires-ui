@@ -41,3 +41,7 @@ textarea[readonly] {
 .panel-body > .container[role="main"] {
   width:80% !important;
 }
+
+form.config .control-label p {
+  font-weight:bold;
+}
