@@ -15,5 +15,5 @@ angular.module('myApp.config', ['ngRoute'])
         $scope.sequenceStart = 0;
         $scope.sequenceStop = 100;
 
-        ApiClientService.getProviders();
+        // Call ApiClientService here to fetch available resources
     }]);
