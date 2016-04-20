@@ -7,7 +7,7 @@ angular.module('myApp', [
   'myApp.config',
   'myApp.progress',
   'myApp.results',
-  'myApp.version'
+  'myApp.execute'
 ]).
 
 config(['$routeProvider', function($routeProvider) {

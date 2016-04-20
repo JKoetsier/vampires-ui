@@ -89,10 +89,9 @@ angular.module('myApp.results', ['ngRoute'])
                 x: res.time,
                 y: res.cost,
                 size: 1,
-                shape: 'circle',
-                label: 'test'
+                shape: 'circle'
             });
 
         });
-        
+
     }]);
