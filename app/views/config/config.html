@@ -1,5 +1,31 @@
 <form class="form-horizontal config">
     <div class="form-group">
+        <div class="col-sm-2 control-label">
+            <p>Resources</p>
+        </div>
+
+        <div class="col-sm-10">
+            <table class="table table-hover providers">
+                <tbody class="provider" ng-repeat="p in providers track by $index">
+                    <tr class="provider-head">
+                        <td>{{ p.name }}</td>
+                        <td>Cost</td>
+                    </tr>
+                    <tr ng-repeat="r in p.resources track by $index | orderBy: 'cost'" ng-class="{true: 'selected'}[$parent.isSelected(p.provider, r.type)]">
+                        <td>
+                            <input value="{{ r.type }}" type="checkbox" ng-click="$parent.toggleSelected(p.provider, r.type)"> {{ r.type }}
+                        </td>
+                        <td>{{ r.cost }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+
+    </div>
+
+    <div class="form-group">
         <label for="description" class="col-sm-2 control-label">Description</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="description" placeholder="Description.." ng-model="description">
@@ -9,14 +35,14 @@
     <div class="form-group">
         <label for="sequenceStart" class="col-sm-2 control-label">Sequence Start</label>
         <div class="col-sm-10">
-            <input type="number" class="form-control" id="sequenceStart" placeholder="Sequence Start" ng-model="sequenceStart">
+            <input type="number" min="0" class="form-control" id="sequenceStart" placeholder="Sequence Start" ng-model="sequenceStart">
         </div>
     </div>
 
     <div class="form-group">
         <label for="sequenceStop" class="col-sm-2 control-label">Sequence Stop</label>
         <div class="col-sm-10">
-            <input type="number" class="form-control" id="sequenceStop" placeholder="Sequence Stop" ng-model="sequenceStop">
+            <input type="number" min="0" class="form-control" id="sequenceStop" placeholder="Sequence Stop" ng-model="sequenceStop">
         </div>
     </div>
 
@@ -44,7 +70,7 @@
         <label for="taskFile" class="col-sm-2 control-label">Task</label>
         <div class="col-sm-10">
             <span class="btn btn-default btn-file">
-                Browse <input type="file" class="form-control" id="taskFile" placeholder="taskFile">
+                Browse <input type="file" class="form-control" id="taskFile" placeholder="taskFile" on-read-file="readContents($contents)">
             </span>
         </div>
     </div>
@@ -60,7 +86,7 @@
 
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">Run</button>
+            <button type="submit" class="btn btn-primary" ng-click="run()">Run</button>
         </div>
     </div>
 </form>

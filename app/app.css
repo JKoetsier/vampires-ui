@@ -45,3 +45,24 @@ textarea[readonly] {
 form.config .control-label p {
   font-weight:bold;
 }
+
+.provider-head {
+  font-style:italic;
+}
+
+table.providers td {
+  border-top:none;
+}
+
+table.providers tbody tr:last-child td {
+  border-bottom:none;
+}
+
+table.providers tr.selected td {
+  font-weight:bold;
+}
+
+.config textarea {
+  font-family:Consolas,Monaco,Lucida Console,Liberation Mono,
+    DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}

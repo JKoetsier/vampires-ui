@@ -10,11 +10,11 @@ angular.module('myApp.api_client', [])
         /*
          * API documentation can be found at http://docs.vampires.apiary.io/
          */
-        calls.getProviders = function() {
+        calls.getProviders = function(cb) {
 
             $http.get(host + '/providers').then(
                 function successCallback(response) {
-
+                    cb(response);
                 },
                 function errorCallback(response) {
 
