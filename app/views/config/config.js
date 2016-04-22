@@ -61,55 +61,12 @@ angular.module('myApp.config', ['ngRoute'])
             // do run
         };
 
+        ApiClientService.getProviders(function(providers) {
 
-        var test = '[ \
-            { \
-                "provider": "ec2", \
-                "name" : "Amazon EC2", \
-                "resources": [ \
-                    { \
-                        "type": "eu-west1.t2.nano", \
-                        "cost": 10 \
-                    }, { \
-                        "type": "eu-west1.t2.micro", \
-                        "cost": 100 \
-                    }, { \
-                        "type": "eu-west1.t3.micro", \
-                        "cost": 110 \
-                    } \
-                ] \
-            }, \
-        \
-            { \
-                "provider": "DAS5", \
-                "name" : "das5", \
-                "resources": [ \
-                    { \
-                        "type": "uva.fat", \
-                        "cost": 10 \
-                    }, \
-                    { \
-                        "type": "uva.gpu", \
-                        "cost": 100 \
-                    }, \
-                    { \
-                        "type": "vu.fat", \
-                        "cost": 110 \
-                    } \
-                ] \
-            } \
-]';
-        test = JSON.parse(test);
-        test.forEach(function(data, i) {
-            $scope.providers.push(data);
+            providers.data.forEach(function(data, i) {
+                $scope.providers.push(data);
+            });
         });
-
-        //ApiClientService.getProviders(function(providers) {
-        //    console.log(providers);
-        //    $scope.providers = providers;
-        //  providers.forEach(function(data, i) {
-        //      $scope.providers.push(data);
-        //});
     }])
 
     .directive('onReadFile', function ($parse) {
