@@ -1,0 +1,88 @@
+<div class="row">
+    <div class="col-md-12">
+        <p>a. Select a workload from the list:</p>
+
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <form class="form-inline">
+                <select class="form-control" ng-model="selectTask">
+                    <option disabled data-id="0" ng-hide="workloads">No workloads found</option>
+                    <option ng-repeat="w in workloads | orderBy: '-created_at' " value="{{ w.id }}">
+                        {{ w.created_at | date: 'dd MMM yyyy HH:mm:ss' }}: {{ w.description }}
+                    </option>
+                </select>
+                <button ng-click="selectWorkload(selectTask)" class="btn btn-default">Select Workload</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-12 top-margin">
+        <p>b. Or create a new workload:</p>
+
+        <form class="form-horizontal" name="newTask">
+            <div class="form-group">
+                <label for="description" class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-10">
+                    <input required name="description" type="text" class="form-control" id="description" placeholder="Description.." ng-model="description">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <p class="col-sm-2 control-label">Task Source</p>
+                <div class="col-sm-10">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="taskType" id="taskTypeFile" value="file" checked ng-model="taskType">
+                            From File
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="taskType" id="taskTypeText" value="text" ng-model="taskType">
+                            From Text
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="taskType == 'file'">
+                <label for="taskFile" class="col-sm-2 control-label">Task</label>
+                <div class="col-sm-10">
+                <span class="btn btn-default btn-file">
+                    Browse <input type="file" ng-required="taskType == 'file'" class="form-control" id="taskFile" placeholder="taskFile" on-read-file="readContents($contents)">
+                </span>
+                <span class="file" ng-show="file.name">File: <span class="name">{{ file.name }}</span></span>
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="taskType == 'text'">
+                <label for="taskText" class="col-sm-2 control-label">Task</label>
+                <div class="col-sm-10">
+
+                    <textarea rows="10" ng-model='taskText' ng-required="taskType == 'text'" class="form-control monospace" id="taskText" placeholder="Task"></textarea>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sequenceStart" class="col-sm-2 control-label">Sequence Start</label>
+                <div class="col-sm-10">
+                    <input type="number" min="0" class="form-control" id="sequenceStart" placeholder="Sequence Start" ng-model="sequenceStart">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sequenceStop" class="col-sm-2 control-label">Sequence Stop</label>
+                <div class="col-sm-10">
+                    <input type="number" min="0" class="form-control" id="sequenceStop" placeholder="Sequence Stop" ng-model="sequenceStop">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+
+                <div class="col-sm-10">
+                    <button ng-click="createWorkload()" class="btn btn-default">Create New</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

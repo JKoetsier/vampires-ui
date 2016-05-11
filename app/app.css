@@ -42,7 +42,7 @@ textarea[readonly] {
   width:80% !important;
 }
 
-form.config .control-label p {
+form p.control-label {
   font-weight:bold;
 }
 
@@ -62,7 +62,39 @@ table.providers tr.selected td {
   font-weight:bold;
 }
 
-.config textarea {
+textarea.monospace {
   font-family:Consolas,Monaco,Lucida Console,Liberation Mono,
     DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}
+
+div.row.actions {
+  margin-top:20px;
+}
+
+.action {
+  display:block;
+  text-align:center;
+  border:1px solid grey;
+  padding:40px 0;
+  border-radius:10px;
+}
+.action i {
+  font-size:50px;
+}
+
+.action i + span {
+  display:block;
+  margin-top:10px;
+}
+
+.top-margin {
+  margin-top:20px;
+}
+
+.btn-file + .file {
+  margin-left:10px;
+}
+
+.btn-file + .file .name {
+  font-style:italic;
 }

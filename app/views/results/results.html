@@ -11,7 +11,8 @@
         <th>Resources</th>
     </tr>
 
-    <tr ng-repeat="result in results | orderBy: sortBy : !sortReverse">
+    <tr ng-class="result == selected ? 'info' : ''" ng-repeat="result in data[0].values | orderBy: sortBy : !sortReverse"
+        ng-click="setSelected(result)">
         <td>{{ result.time }}</td>
         <td>{{ result.cost | currency : '$' : 2 }}</td>
         <td>{{ result.resources }}</td>
@@ -20,3 +21,9 @@
 </table>
 
 <nvd3 options="options" data="data"></nvd3>
+
+<div class="selectedConfiguration" ng-show="selected">
+    <h4>Selected Configuration:</h4>
+
+    <button class="btn btn-default" ng-click="execute()">Run!</button>
+</div>

@@ -10,11 +10,16 @@ angular.module('myApp.results', ['ngRoute'])
         });
     }])
 
-    .controller('ResultsController', ['$scope', function($scope) {
+    .controller('ResultsController', ['$scope', 'ExecutionHelperService', 'ApiClientService', function($scope, ExecutionHelperService, ApiClientService) {
         $scope.results = [];
 
         $scope.sortReverse = false;
         $scope.sortBy = 'time';
+        $scope.yTicks = [];
+        $scope.xTicks = [];
+        $scope.data = [];
+        $scope.selected = null;
+
 
         $scope.mockData = function() {
             $scope.results.push({
@@ -37,35 +42,111 @@ angular.module('myApp.results', ['ngRoute'])
         };
         $scope.mockData();
 
+
+        $scope.getResults = function getResults() {
+            ApiClientService.configurations.getByWorkload(
+                ExecutionHelperService.getWorkloadId(), function(data) {
+
+                    $scope.results = data;
+                    //data.forEach(function(conf) {
+                    //
+                    //    $scope.results.push(conf);
+                    //})
+                    $scope.showData();
+                }
+            )
+        };
+
+        $scope.showData = function showData() {
+            $scope.results.forEach(function(result) {
+
+            });
+        };
+
+        $scope.setSelected = function setSelected(result) {
+            $scope.data[0].values.forEach(function(val) {
+                val.size = 3;
+            });
+
+            result.size = 5;
+
+            $scope.selected = result;
+        };
+
+        $scope.execute = function execute() {
+            ExecutionHelperService.setConfigurationId($scope.selected.configuration_id);
+            ExecutionHelperService.doNextStep();
+        };
+
+
+        $scope.data.push({key: '', values: []});
+
+        var maxY = null;
+        var maxX = null;
+
+        $scope.results.forEach(function(result) {
+            if (!maxX || result.time > maxX) maxX = result.time;
+            if (!maxY || result.cost > maxY) maxY = result.cost;
+
+            $scope.data[0].values.push({
+                x: result.time,
+                y: result.cost,
+                size: 3,
+                shape: 'circle',
+                time: result.time,
+                cost: result.cost,
+                resources: result.resources,
+                configuration_id: 'TEST_ID'
+            });
+        });
+
+
+        for (var i = 0; i < maxY + 1; i += 5) {
+            $scope.yTicks.push(i);
+        }
+        for (var i = 0; i < maxX + 1; i++) {
+            $scope.xTicks.push(i);
+        }
+
+        $scope.xDomain = [0, maxX];
+        $scope.yDomain = [0, maxY];
+
         $scope.options = {
             chart: {
                 type: 'scatterChart',
                 height: 450,
                 color: d3.scale.category10().range(),
                 scatter: {
-                    onlyCircles: false
+                    onlyCircles: false,
+                    dispatch: {
+                        elementClick: function(e) {
+                            $scope.setSelected(e.point);
+                            $scope.$apply();
+                        }
+                    }
                 },
                 showDistX: true,
                 showDistY: true,
-                //tooltipContent: function(d) {
-                //    return d.series && '<h3>' + d.series[0].key + '</h3>';
-                //},
                 duration: 350,
                 xAxis: {
                     axisLabel: 'Time (hrs)',
+                    tickValues: $scope.xTicks,
                     tickFormat: function(d){
                         return d3.format('.02f')(d);
                     }
                 },
                 yAxis: {
                     axisLabel: 'Cost (USD)',
+                    tickValues: $scope.yTicks,
                     tickFormat: function(d){
                         return d3.format('.02f')(d);
                     },
                     axisLabelDistance: -5
                 },
+                xDomain: $scope.xDomain,
+                yDomain: $scope.yDomain,
+                showLegend: false,
                 zoom: {
-                    //NOTE: All attributes below are optional
                     enabled: true,
                     scaleExtent: [1, 10],
                     useFixedDomain: false,
@@ -76,22 +157,5 @@ angular.module('myApp.results', ['ngRoute'])
                 }
             }
         };
-
-        $scope.data = [];
-        $scope.data.key = 'Group';
-        $scope.data.values = [];
-
-        $scope.data.push({key: 'Group', values: []});
-
-        $scope.results.forEach(function(res, i) {
-
-            $scope.data[0].values.push({
-                x: res.time,
-                y: res.cost,
-                size: 1,
-                shape: 'circle'
-            });
-
-        });
 
     }]);

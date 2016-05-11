@@ -4,15 +4,17 @@
 angular.module('myApp', [
   'ngRoute',
   'nvd3',
-  'myApp.config',
-  'myApp.progress',
+  'myApp.resources',
   'myApp.results',
   'myApp.execute',
-  'myApp.api_client'
+  'myApp.start',
+  'myApp.workload',
+  'myApp.api_client',
+  'myApp.execution_helper'
 ]).
 
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/config'});
+  $routeProvider.otherwise({redirectTo: '/start'});
 }])
 
 .run(['$rootScope', '$route', function($rootScope, $route) {
