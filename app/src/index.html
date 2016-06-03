@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vampires</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--
+         DO NOT DECLARE SCRIPTS OR STYLESHEET IMPORTS HERE.
+         USE THE GRUNTFILE.JS INSTEAD
+     -->
+
+    <!-- build:style all -->
+    <!-- /build -->
+
+    <!-- build:style bower -->
+    <!-- /build -->
+
+    <!-- build:style app -->
+    <!-- /build -->
+
+</head>
+<body role="document">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Vampires</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading" ng-bind="$root.title">Vampires</div>
+        <div class="panel-body">
+            <div class="container" ng-view role="main"></div>
+        </div>
+    </div>
+</div>
+
+<!--
+     DO NOT DECLARE SCRIPTS OR STYLESHEET IMPORTS HERE.
+     USE THE GRUNTFILE.JS INSTEAD
+ -->
+
+<!-- build:script all -->
+<!-- /build -->
+
+<!-- build:script bower -->
+<!-- /build -->
+
+<!-- build:script app -->
+<!-- /build -->
+
+
+
+
+</body>
+</html>

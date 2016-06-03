@@ -13,6 +13,6 @@
 * In project root, do:
 
         npm install
-        npm start
+        grunt run
 
-* Navigate to http://localhost:8000/app in your browser.
+* Navigate to http://localhost:8080 in your browser.

@@ -1,0 +1,54 @@
+<table class="table table-bordered">
+    <tr>
+        <th ng-click="sortBy = 'time'; sortReverse = !sortReverse">Est. Time (hrs)
+            <span ng-show="sortBy == 'time' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortBy == 'time' && sortReverse" class="fa fa-caret-up"></span>
+        </th>
+        <th ng-click="sortBy = 'cost'; sortReverse = !sortReverse">Est. Cost
+            <span ng-show="sortBy == 'cost' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortBy == 'cost' && sortReverse" class="fa fa-caret-up"></span>
+        </th>
+        <th>Resources</th>
+    </tr>
+
+    <tr ng-class="result == selected ? 'info' : ''" ng-repeat="result in data[0].values | orderBy: sortBy : !sortReverse"
+        ng-click="setSelected(result)">
+        <td>{{ result.time }}</td>
+        <td>{{ result.cost | currency : '$' : 2 }}</td>
+        <td>{{ result.resources }}</td>
+    </tr>
+
+</table>
+
+<nvd3 options="options" data="data"></nvd3>
+
+<div class="resultgraphs graphs">
+    <ul class="nav nav-tabs">
+        <li ng-class="active == 'totals' ? 'active': ''"><a ng-click="showStats('totals')">Totals</a></li>
+        <li ng-class="active == showProviders ? 'active' : ''"><a ng-click="showProviders = !showProviders">Providers</a></li>
+        <li ng-class="active == showInstances ? 'active' : ''"><a ng-click="showInstances = !showInstances">Instances</a></li>
+    </ul>
+    <ul class="nav nav-tabs" ng-show="showProviders">
+        <li>Providers:</li>
+        <li ng-repeat="(providerName, data) in resultData.providerTypes"><a ng-click="showStats(data)">{{ providerName }}</a></li>
+    </ul>
+    <ul class="nav nav-tabs" ng-show="showInstances">
+        <li>Instances:</li>
+        <li ng-repeat="(instanceName, data) in resultData.instanceTypes"><a ng-click="showStats(data)">{{ instanceName }}</a></li>
+    </ul>
+
+    <div class="graph panel panel-default" ng-repeat="(name, hist) in activeStats.histograms">
+        <div ng-click="hist.show = !hist.show" class="panel-heading">{{ name }}</div>
+        <div class="panel-body" ng-show="hist.show" >
+            <nvd3 options="histoOptions" data="hist.data"></nvd3>
+        </div>
+
+    </div>
+    <!--<nvd3 options="histoOptions" data="histogramTest"></nvd3>-->
+</div>
+
+<div class="selectedConfiguration" ng-show="selected">
+    <h4>Selected Configuration:</h4>
+
+    <button class="btn btn-default" ng-click="execute()">Run!</button>
+</div>

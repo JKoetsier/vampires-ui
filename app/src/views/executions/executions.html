@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-12">
+
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Created</th>
+                <th>Last update</th>
+                <th>Type</th>
+                <th>Status</th>
+            </tr>
+            <tr ng-repeat="exec in executions | orderBy: '-created_at'">
+                <td>
+                    <a ng-href="#/results/{{ exec.id }}">{{ exec.id }}</a></td>
+                <td>{{ exec.created_at }}</td>
+                <td>{{ exec.updated_at }}</td>
+                <td>{{ exec.type }}</td>
+                <td>{{ exec.info.status }}
+            </tr>
+        </table>
+    </div>
+</div>

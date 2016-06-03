@@ -1,0 +1,33 @@
+<div class="row">
+    <form class="progress-form">
+        <div class="form-group">
+            <label for="progress">{{ niceStatus }}</label>
+
+        <textarea show-tail class="form-control" id="progress" rows="5" readonly ng-model="progressText">
+
+        </textarea>
+
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped" ng-class="done ? '' : 'active'" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%">
+            </div>
+        </div>
+        <div class="progress-text">
+            <span>{{ progress }}%</span>
+        </div>
+    </form>
+
+</div>
+
+<div class="row top-margin">
+    <div ng-show="done">
+        <p>Done!</p>
+        <button class="btn btn-success" ng-click="toResults()">See results</button>
+    </div>
+    <div ng-hide="done">
+        <button class="btn btn-warning" ng-show="!stopped" ng-click="stopExecution()">Stop</button>
+        <button class="btn btn-success" ng-show="stopped" ng-click="continueExecution()">Start</button>
+        <button class="btn btn-danger" ng-click="killExecution()">Kill</button>
+    </div>
+</div>
