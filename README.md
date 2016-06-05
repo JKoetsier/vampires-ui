@@ -2,13 +2,16 @@
 
 ## Usage:
 
-* Install NPM (Node Package Manager) (yum install npm, apt-get install npm)
+* Install Node.js and NPM. These are needed for dependency management.
 
-        yum install npm
+        yum install nodejs npm
 
     or
+        dnf install nodejs npm
 
-        apt-get install npm
+    or
+        apt-get install nodejs npm
+
 
 * In project root, do:
 
