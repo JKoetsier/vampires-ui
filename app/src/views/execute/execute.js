@@ -78,6 +78,7 @@
                 $scope.checkStatus = function checkStatus() {
 
                     $scope.execution.getStatus(function(status) {
+                        status = status.info;
                         if ($scope.lastUpdate && $scope.lastUpdate == status.lastupdate_at) {
                             /* No update */
                             return;

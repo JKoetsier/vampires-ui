@@ -1,0 +1,27 @@
+<div class="tabs">
+    <ul class="nav nav-tabs">
+        <li ng-class="selected == root.totals ? 'active' : ''">
+            <a ng-click="showData(root.totals); setTotals()">Totals</a>
+        </li>
+        <li ng-class="selectedProvider == provider ? 'active' : ''" ng-repeat="(providerName, provider) in root.providers">
+            <a ng-click="showData(provider.totals); setProvider(provider)" >{{ providerName }}</a>
+        </li>
+    </ul>
+    <ul class="nav nav-tabs" ng-show="selectedProvider">
+        <li ng-class="selected == selectedProvider.totals ? 'active' : ''">
+            <a ng-click="showData(selectedProvider.totals); setProvider(selectedProvider)">All</a>
+        </li>
+        <li ng-class="selectedInstance == instance ? 'active' : ''" ng-repeat="(instanceName, instance) in selectedProvider.instances">
+            <a ng-click="showData(instance.totals); setInstance(instance)">{{ instanceName }}</a>
+        </li>
+    </ul>
+
+    <ul class="nav nav-tabs" ng-show="selectedInstance">
+        <li ng-class="selected == selectedInstance.totals ? 'active' : ''">
+            <a ng-click="showData(selectedInstance.totals); setInstance(selectedInstance)">All</a>
+        </li>
+        <li ng-class="selectedClient == client ? 'active' : ''" ng-repeat="(clientId, client) in selectedInstance.clients">
+            <a ng-click="showData(client.totals); setClient(client)">{{ clientId }}</a>
+        </li>
+    </ul>
+</div>

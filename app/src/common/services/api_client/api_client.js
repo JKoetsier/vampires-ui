@@ -3,13 +3,13 @@
 
     angular.module('myApp.api_client', [])
 
-        .factory('ApiClientService', ['$http', 'API_URL', 'Auth', function($http, API_URL, Auth) {
+        .factory('ApiClientService', ['$http', 'API_URL', 'AuthService', function($http, API_URL, AuthService) {
             var host = API_URL;
             var calls = {};
 
             var config = {
                 headers: {
-                    'Authorization': 'Basic ' + Auth.getBase64()
+                    'Authorization': 'Basic ' + AuthService.getBase64()
                 }
             };
 

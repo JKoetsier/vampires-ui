@@ -22,30 +22,11 @@
 
 <nvd3 options="options" data="data"></nvd3>
 
-<div class="resultgraphs graphs">
-    <ul class="nav nav-tabs">
-        <li ng-class="active == 'totals' ? 'active': ''"><a ng-click="showStats('totals')">Totals</a></li>
-        <li ng-class="active == showProviders ? 'active' : ''"><a ng-click="showProviders = !showProviders">Providers</a></li>
-        <li ng-class="active == showInstances ? 'active' : ''"><a ng-click="showInstances = !showInstances">Instances</a></li>
-    </ul>
-    <ul class="nav nav-tabs" ng-show="showProviders">
-        <li>Providers:</li>
-        <li ng-repeat="(providerName, data) in resultData.providerTypes"><a ng-click="showStats(data)">{{ providerName }}</a></li>
-    </ul>
-    <ul class="nav nav-tabs" ng-show="showInstances">
-        <li>Instances:</li>
-        <li ng-repeat="(instanceName, data) in resultData.instanceTypes"><a ng-click="showStats(data)">{{ instanceName }}</a></li>
-    </ul>
+<cpu-usage-graph cpu-usages="cpuUsages"></cpu-usage-graph>
 
-    <div class="graph panel panel-default" ng-repeat="(name, hist) in activeStats.histograms">
-        <div ng-click="hist.show = !hist.show" class="panel-heading">{{ name }}</div>
-        <div class="panel-body" ng-show="hist.show" >
-            <nvd3 options="histoOptions" data="hist.data"></nvd3>
-        </div>
+<network-counters-table counters="networkCounters"></network-counters-table>
 
-    </div>
-    <!--<nvd3 options="histoOptions" data="histogramTest"></nvd3>-->
-</div>
+<network-speed-graph network-speeds="networkSpeeds"></network-speed-graph>
 
 <div class="selectedConfiguration" ng-show="selected">
     <h4>Selected Configuration:</h4>

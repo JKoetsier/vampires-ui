@@ -15,6 +15,8 @@
             var networkCounters = null;
             var data = null;
             var cpuLoadArray = null;
+            var networkSpeedsArray = null;
+            var networkCountersArray = null;
 
             const TYPE_TOTAL = 1;
             const TYPE_PROVIDER = 2;
@@ -35,13 +37,15 @@
                 networkSpeeds = null;
                 networkCounters = null;
                 cpuLoadArray = null;
+                networkSpeedsArray = null;
+                networkCountersArray = null;
             };
 
             /* Constructs an array with cpu loads in hierarchical order */
             var loadCpuLoadArray = function loadCpuLoadArray() {
                 if (!data) throw "No data set";
 
-                var n, loadType, label, splitted, statType, position;
+                var n, loadType, label, splitted, statType, position, i, key;
                 cpuLoadArray = {};
 
 
@@ -60,13 +64,77 @@
                     // user, system, idle, nice
                     loadType = label[3];
 
-                    if (!(n in cpuLoadArray)) {
-                        cpuLoadArray[n] = {};
-                    }
+                    //if (!(n in cpuLoadArray)) {
+                    //    cpuLoadArray[n] = {};
+                    //}
 
 
                     /* Find correct position in structure */
-                    position = cpuLoadArray[n];
+                    //position = cpuLoadArray[n];
+
+                    position = cpuLoadArray;
+                    for (i = 1; i < statType; i++) {
+                        if (!(levelNames[i] in position)) {
+                            position[levelNames[i]] = {};
+
+                        }
+                        position = position[levelNames[i]];
+
+                        if (!(splitted[i] in position)) {
+                            position[splitted[i]] = {};
+                        }
+                        position = position[splitted[i]];
+                    }
+
+                    if (!('totals' in position)) {
+                        position.totals = {};
+                    }
+
+                    if (!(n in position.totals)) {
+                        position.totals[n] = {};
+                    }
+                    position.totals[n][loadType] = data.stats.histograms[hist];
+
+
+
+                    /* Calculate percentages */
+                    if (Object.keys(position.totals[n]).length == 4) {
+                        var total;
+
+                        for (i = 0; i < position.totals[n].idle.count; i++) {
+                            total = 0;
+                            for (key in position.totals[n]) {
+                                total += position.totals[n][key].values[i];
+                            }
+
+                            for (key in position.totals[n]) {
+                                position.totals[n][key].values[i] /= total * 100;
+                            }
+                        }
+                    }
+
+                }
+            };
+
+            var loadNetworkSpeedArray = function loadNetworkSpeedArray() {
+                if (!data) throw "No data set";
+
+                var splitted, label, intface, statType, position, dataType;
+
+                networkSpeedsArray = {};
+                for (var hist in data.stats.histograms) {
+                    if (!hist.startsWith('network-'))
+                        continue;
+
+                    splitted = hist.split(':');
+                    label = splitted[0].split('-');
+
+                    statType = splitted.length;
+                    dataType = label[1];
+
+                    intface = label[3];
+
+                    position = networkSpeedsArray;
                     for (var i = 1; i < statType; i++) {
                         if (!(levelNames[i] in position)) {
                             position[levelNames[i]] = {};
@@ -84,14 +152,72 @@
                         position.totals = {};
                     }
 
-                    position.totals[loadType] = data.stats.histograms[hist];
+                    if (!(dataType in position.totals)) {
+                        position.totals[dataType] = {};
+                    }
+                    position.totals[dataType][intface] = data.stats.histograms[hist];
+
                 }
+            };
+
+            var loadNetworkCountersArray = function loadNetworkCountersARray() {
+                if (!data) throw 'No data to work with';
+
+                networkCountersArray = {};
+
+                var splitted, label, position, statType, dataType, intface;
+
+                for (var counter in data.stats.counters) {
+                    if (!counter.startsWith('network-rx-bytes-') &&
+                        !counter.startsWith('network-tx-bytes-'))
+                        continue;
+
+                    splitted = counter.split(':');
+                    label = splitted[0].split('-');
+
+                    statType = splitted.length;
+                    dataType = label[1];
+                    intface = label[3];
+
+                    position = networkCountersArray;
+                    for (var i = 1; i < statType; i++) {
+                        if (!(levelNames[i] in position)) {
+                            position[levelNames[i]] = {};
+
+                        }
+                        position = position[levelNames[i]];
+
+                        if (!(splitted[i] in position)) {
+                            position[splitted[i]] = {};
+                        }
+                        position = position[splitted[i]];
+                    }
+
+                    if (!('totals' in position)) {
+                        position.totals = {};
+                    }
+
+                    if (!(intface in position.totals)) {
+                        position.totals[intface] = {};
+                    }
+
+                    position.totals[intface][dataType] = data.stats.counters[counter].count;
+                }
+            };
+
+            factory.getNetworkSpeeds = function getNetworkSpeeds(n) {
+                if (networkSpeeds) return networkSpeeds;
+
+                if (!networkSpeedsArray)
+                    loadNetworkSpeedArray();
+
+                return networkSpeedsArray;
             };
 
             /* Returns structure with the average loads of all logical cpu
              * cores over the last n ticks. n defaults to 3
              */
-            factory.getCombinedCpuLoad = function getCombinedCpuLoad(n) {
+            factory.getCurrentCpuLoads = function getCurrentCpuLoads(n) {
                 if (combinedCpuLoad) return combinedCpuLoad;
 
                 var total, totalTicks, loadType;
@@ -123,42 +249,41 @@
                     }
 
                 }
+                combinedCpuLoad = result;
 
                 return result;
             };
 
-            factory.getCpuLoadPerCpu = function getCpuLoadPerCpu(i) {
+            factory.getCpuLoads = function getCpuLoads() {
                 if (cpuLoadPerCpu) return cpuLoadPerCpu;
 
                 if (!cpuLoadArray) {
                     loadCpuLoadArray();
                 }
 
-                if (!(i in cpuLoadArray)) {
-                    throw 'CPU number not known';
-                }
+                //var result = {};
+                //var total;
+                //
+                //console.log(cpuLoadArray);
+                //for (var core in cpuLoadArray) {
+                //    total = 0;
+                //    for (var loadType in cpuLoadArray[core].totals) {
+                //        result[loadType] = cpuLoadArray[core].totals[loadType].values;
+                //    }
+                //}
 
-                var result = {};
-
-                for (var core in cpuLoadArray) {
-                    for (var loadType in cpuLoadArray[core].totals) {
-                        result[loadType] = cpuLoadArray[core].totals[loadType].values;
-                    }
-                }
-
-                return result;
-            };
-
-            factory.getNetworkSpeeds = function getNetworkSpeeds() {
-                if (networkSpeeds) return networkSpeeds;
-
+                return cpuLoadArray;
             };
 
             factory.getNetworkCounters = function getNetworkCounters() {
                 if (networkCounters) return networkCounters;
 
-            };
+                if (!networkCountersArray) {
+                    loadNetworkCountersArray();
+                }
 
+                return networkCountersArray;
+            };
 
             return factory;
 

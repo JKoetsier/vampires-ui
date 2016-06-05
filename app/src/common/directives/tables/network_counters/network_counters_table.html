@@ -1,0 +1,19 @@
+<div class="network_speeds">
+    <h2>Network Throughput</h2>
+
+    <statistics-tabs root="counters" select-function="showData({data: data})"></statistics-tabs>
+
+    <table class="table">
+        <tr>
+            <th>Interface</th>
+            <th>Received</th>
+            <th>Sent</th>
+        </tr>
+
+        <tr ng-repeat="(key, data) in selected">
+            <td>{{ key }}</td>
+            <td>{{ data.rx | bytes }}</td>
+            <td>{{ data.tx | bytes }}</td>
+        </tr>
+    </table>
+</div>

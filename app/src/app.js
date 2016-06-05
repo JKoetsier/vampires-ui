@@ -20,16 +20,16 @@
         'myApp.models.workload',
         'myApp.models.configuration',
         'myApp.models.resource',
-        'myApp.models.execution'
+        'myApp.models.execution',
       ])
 
       .config(['$routeProvider', function($routeProvider) {
         $routeProvider.otherwise({redirectTo: '/start'});
       }])
 
-      .run(['$rootScope', '$route', 'AuthService', '$location', function($rootScope, $route, Auth, $location) {
+      .run(['$rootScope', '$route', 'AuthService', '$location', function($rootScope, $route, AuthService, $location) {
         $rootScope.$on('$routeChangeStart', function(event, curRoute, prevRoute) {
-          if (!Auth.isLoggedIn() && !$location.path().startsWith('/login')) {
+          if (!AuthService.isLoggedIn() && !$location.path().startsWith('/login')) {
             $location.path('/login' + $location.path());
           }
         });

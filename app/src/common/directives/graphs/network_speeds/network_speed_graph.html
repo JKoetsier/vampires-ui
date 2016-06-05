@@ -1,0 +1,12 @@
+<div class="network_speeds">
+    <h2>Network Bandwidth</h2>
+
+    <span>Interfaces: </span>
+    <label class="checkbox-inline" ng-repeat="(key, data) in networkSpeeds.totals.tx">
+        <input type="checkbox" ng-change="updateData()" ng-model="selectedInterfaces[key]">{{ key }}
+    </label>
+
+    <statistics-tabs root="networkSpeeds" select-function="showData({data: data})"></statistics-tabs>
+
+    <nvd3 options="lineChartOptions" data="data"></nvd3>
+</div>

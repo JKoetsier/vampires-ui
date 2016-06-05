@@ -16,8 +16,11 @@ imports.js.bower = [
 
 imports.js.app = [
     'app/src/app.js',
-    'app/src/common/directives/progress_bar/progress_bar.js',
+    'app/src/common/directives/graphs/network_speeds/network_speed_graph.js',
+    'app/src/common/directives/graphs/cpu_usage/cpu_usage_graph.js',
+    'app/src/common/directives/tables/network_counters/network_counters_table.js',
     'app/src/common/directives/textarea_tail/textarea_tail.js',
+    'app/src/common/directives/statistics_tabs/statistics_tabs.js',
     'app/src/common/models/configuration.js',
     'app/src/common/models/resource.js',
     'app/src/common/models/workload.js',

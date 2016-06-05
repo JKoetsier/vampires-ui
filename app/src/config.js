@@ -12,6 +12,7 @@
                 type:               'sample',
                 pollingInterval:    2000
             }
-        });
+        })
+        .constant('GRAPH_MIN_CPU_USAGE', 0);
 }());
 
