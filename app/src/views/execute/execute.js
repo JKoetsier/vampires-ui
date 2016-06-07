@@ -12,9 +12,9 @@
             });
         }])
 
-        .controller('ExecuteController', ['ExecutionHelperService', 'ApiClientService',
+        .controller('ExecuteController', ['ExecutionHelperService', 'ExecutionDataExtractService', 'ApiClientService',
             '$scope', '$route', '$interval', 'EXECUTION_SETTINGS',
-            function(ExecutionHelperService, ApiClientService, $scope, $route, $interval,
+            function(ExecutionHelperService, ExecutionDataExtractService, ApiClientService, $scope, $route, $interval,
                      EXECUTION_SETTINGS) {
 
                 $scope.done = false;
@@ -78,7 +78,17 @@
                 $scope.checkStatus = function checkStatus() {
 
                     $scope.execution.getStatus(function(status) {
+                        if (status.info.status == 'running') {
+                            ExecutionDataExtractService.setData(status.info);
+                            $scope.cpuUsages = ExecutionDataExtractService.getCpuLoads();
+                            $scope.networkSpeeds = ExecutionDataExtractService.getNetworkSpeeds();
+                            $scope.statsAvailable = true;
+                            $scope.started = true;
+                        }
                         status = status.info;
+
+                        $scope.update = true;
+
                         if ($scope.lastUpdate && $scope.lastUpdate == status.lastupdate_at) {
                             /* No update */
                             return;
@@ -90,7 +100,7 @@
 
                         $scope.lastUpdate = status.lastupdate_at;
 
-                        $scope.progress = (status.total - status.remaining) / status.total * 100;
+                        $scope.progress = parseFloat((status.total - status.remaining) / status.total * 100).toFixed(1);
 
                         var newLine = $scope.progress + '% done. ' +
                             status.completed + ' of ' + status.total + ' completed';
@@ -105,8 +115,6 @@
                         if (status.remaining === 0) {
                             $scope.setFinished(status);
                         }
-
-
                     });
                 };
 
@@ -117,28 +125,17 @@
                         data.total + ' succeeded. ' + data.failed + ' failed');
                 };
 
-                $scope.killExecution = function killExecution() {
-                    console.log('clicked kill');
-                    $scope.execution.kill(function(data) {
-
-                    });
-                    //ApiClientService.executions.changeStatus($scope.executionId, 'stop',
-                    //    function(data) {
-                    //
-                    //        $scope.setStatus(data.status);
-                    //    });
-                };
-
                 $scope.stopExecution = function stopExecution() {
-                    console.log('clicked stop');
                     $scope.execution.stop(function(data) {
                         $scope.stopped = true;
+                        $scope.done = true;
+                        $interval.cancel(pollingInterval);
 
+                        $scope.addProgressLine('Cancelled by user');
                     });
                 };
 
                 $scope.continueExecution = function continueExecution() {
-                    console.log('clicked continue');
                     $scope.execution.start(function(data) {
                         $scope.stopped = false;
                     });

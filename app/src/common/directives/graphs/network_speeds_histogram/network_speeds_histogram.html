@@ -1,0 +1,25 @@
+<div class="network_speeds histogram stats_block">
+    <h2>Network Speed</h2>
+
+    <div class="selection">
+        <span>Interfaces: </span>
+        <label class="radio-inline" ng-repeat="(key, data) in networkSpeeds.totals.tx">
+            <input type="radio" name="selectedInterface" ng-change="updateData()" value="{{ key }}" ng-model="$parent.selectedInterface">{{ key }}
+        </label>
+    </div>
+    <div class="selection">
+        <span>Upload/Download: </span>
+        <label class="radio-inline">
+            <input type="radio" name="selectedType" ng-change="updateData()" value="tx" ng-model="selectedType"> Upload
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="selectedType" ng-change="updateData()" value="rx" ng-model="selectedType"> Download
+        </label>
+    </div>
+
+    <statistics-tabs root="networkSpeeds" select-function="showData({data: data})"></statistics-tabs>
+
+    <nvd3 options="histogramOptions" data="data"></nvd3>
+
+    <histogram-stats ng-show="data" stats="stats"></histogram-stats>
+</div>

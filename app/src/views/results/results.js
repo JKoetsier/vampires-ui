@@ -17,9 +17,9 @@
 
         .controller('ResultsController', ['$scope', 'ExecutionHelperService',
             'ApiClientService', 'Execution', '$routeParams', 'ExecutionDataExtractService', function($scope, ExecutionHelperService, ApiClientService, Execution, $routeParams, ExecutionDataExtractService) {
-                $scope.results = [];
 
-
+                $scope.sortBy = 'duration';
+                $scope.sortRevers = false;
 
                 /* Returns the execution from which to show results */
                 $scope.getExecution = function getExecution() {
@@ -41,13 +41,15 @@
 
                     execution.getStatus(function(status) {
                         ExecutionDataExtractService.setData(status.info);
-                        //ExecutionDataExtractService.getCurrentCpuLoads();
                         $scope.networkSpeeds = ExecutionDataExtractService.getNetworkSpeeds();
                         $scope.cpuUsages = ExecutionDataExtractService.getCpuLoads();
 
                         $scope.networkCounters = ExecutionDataExtractService.getNetworkCounters();
 
-                        console.log($scope.networkCounters);
+                        $scope.costStats = ExecutionDataExtractService.getCostStatistics();
+                        $scope.loaded = true;
+
+                        console.log($scope.costStats);
 
                     });
                 };

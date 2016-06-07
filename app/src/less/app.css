@@ -1,4 +1,14 @@
 /* app css stylesheet */
+@media (min-width: 1400px) {
+  .container {
+    width: 1370px !important;
+  }
+}
+@media (min-width: 1600px) {
+  .container {
+    width: 1570px !important;
+  }
+}
 body {
   padding-top: 70px;
 }
@@ -95,4 +105,27 @@ div.row.actions {
 }
 .nav-tabs .text {
   padding: 10px 15px;
+}
+.histogram {
+  position: relative;
+  clear: both;
+}
+.histogram nvd3 {
+  width: 70%;
+  float: left;
+}
+.histogram .histogram-stats {
+  width: 30%;
+  float: left;
+}
+.stats_block {
+  clear: both;
+  position: relative;
+}
+div.loader {
+  text-align: center;
+}
+button.execution-action {
+  float: right;
+  margin-bottom: 10px;
 }

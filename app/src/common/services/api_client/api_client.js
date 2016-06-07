@@ -205,13 +205,9 @@
                 );
             };
 
-            /* Valid actions are 'start', 'stop', 'kill' */
-            calls.executions.changeStatus = function(execution_id, action, cb) {
-                var data = {
-                    action: action
-                };
 
-                $http.post(host + '/executions/' + execution_id, data, config).then(
+            calls.executions.stop = function(execution_id, cb) {
+                $http.delete(host + '/executions/' + execution_id, config).then(
                     function successCallback(response) {
                         cb(response.data);
                     },

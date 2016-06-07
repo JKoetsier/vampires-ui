@@ -39,8 +39,8 @@
 
                     workload.setFromJson({
                         task: task,
-                        sequenceStart: $scope.sequenceStart,
-                        sequenceStop: $scope.sequenceStop,
+                        sequence_start: $scope.sequenceStart,
+                        sequence_stop: $scope.sequenceStop,
                         description: $scope.description
                     });
 

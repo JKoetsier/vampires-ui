@@ -1,0 +1,9 @@
+<div class="cpu_usage histogram stats_block">
+    <h2>CPU Usage</h2>
+
+    <statistics-tabs root="cpuUsages" select-function="showData({data: data})"></statistics-tabs>
+
+    <nvd3 options="histogramOptions" data="data"></nvd3>
+
+    <histogram-stats ng-show="data" stats="stats"></histogram-stats>
+</div>

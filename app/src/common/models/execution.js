@@ -10,10 +10,6 @@
                 this.workload = workload;
                 this.type = type;
                 this.status = null;
-
-                if (this.id) {
-                    this.load();
-                }
             }
 
             Execution.getAll = function(cb) {
@@ -50,20 +46,11 @@
                     });
             };
 
-            Execution.prototype.kill = function(cb) {
-                console.log('killing');
-                ApiClientService.executions.changeStatus(this.id, 'kill',
-                    function(data) {
-
-                        cb(data);
-                    });
-            };
 
             Execution.prototype.stop = function(cb) {
                 console.log('stopping');
-                ApiClientService.executions.changeStatus(this.id, 'stop',
+                ApiClientService.executions.stop(this.id,
                     function(data) {
-
                         cb(data);
                     });
             };

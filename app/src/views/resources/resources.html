@@ -9,7 +9,7 @@
                 <tbody class="provider" ng-repeat="p in providers track by $index">
                 <tr class="provider-head">
                     <td>{{ p.provider }}</td>
-                    <td>Cost</td>
+                    <td>Instance Cost</td>
                 </tr>
                 <tr ng-repeat="r in p.resources track by $index | orderBy: 'cost'" ng-class="{true: 'selected'}[$parent.isSelected(p.provider, r.type)]">
                     <td>

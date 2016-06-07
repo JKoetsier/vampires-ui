@@ -1,32 +1,47 @@
-<table class="table table-bordered">
-    <tr>
-        <th ng-click="sortBy = 'time'; sortReverse = !sortReverse">Est. Time (hrs)
-            <span ng-show="sortBy == 'time' && !sortReverse" class="fa fa-caret-down"></span>
-            <span ng-show="sortBy == 'time' && sortReverse" class="fa fa-caret-up"></span>
-        </th>
-        <th ng-click="sortBy = 'cost'; sortReverse = !sortReverse">Est. Cost
-            <span ng-show="sortBy == 'cost' && !sortReverse" class="fa fa-caret-down"></span>
-            <span ng-show="sortBy == 'cost' && sortReverse" class="fa fa-caret-up"></span>
-        </th>
-        <th>Resources</th>
-    </tr>
 
-    <tr ng-class="result == selected ? 'info' : ''" ng-repeat="result in data[0].values | orderBy: sortBy : !sortReverse"
-        ng-click="setSelected(result)">
-        <td>{{ result.time }}</td>
-        <td>{{ result.cost | currency : '$' : 2 }}</td>
-        <td>{{ result.resources }}</td>
-    </tr>
 
-</table>
+<!--<nvd3 options="options" data="data"></nvd3>-->
 
-<nvd3 options="options" data="data"></nvd3>
+<div ng-if="loaded">
+    <table class="table table-bordered">
+        <tr>
+            <th ng-click="sortBy = 'duration'; sortReverse = !sortReverse">Avg. Duration (ms)
+                <span ng-show="sortBy == 'duration' && !sortReverse" class="fa fa-caret-down"></span>
+                <span ng-show="sortBy == 'duration' && sortReverse" class="fa fa-caret-up"></span>
+            </th>
+            <th ng-click="sortBy = 'cost'; sortReverse = !sortReverse">Instance Cost
+                <span ng-show="sortBy == 'cost' && !sortReverse" class="fa fa-caret-down"></span>
+                <span ng-show="sortBy == 'cost' && sortReverse" class="fa fa-caret-up"></span>
+            </th>
+            <th ng-click="sortBy = 'timecost'; sortReverse = !sortReverse">Task Cost
+                <span ng-show="sortBy == 'timecost' && !sortReverse" class="fa fa-caret-down"></span>
+                <span ng-show="sortBy == 'timecost' && sortReverse" class="fa fa-caret-up"></span>
+            </th>
 
-<cpu-usage-graph cpu-usages="cpuUsages"></cpu-usage-graph>
+            <th>Resources</th>
+        </tr>
 
-<network-counters-table counters="networkCounters"></network-counters-table>
+        <tr ng-class="result == selected ? 'info' : ''" ng-repeat="(key, result) in costStats | orderBy: sortBy : !sortReverse"
+            ng-click="setSelected(result)">
+            <td>{{ result.duration | number: 0 }}</td>
+            <td>{{ result.instance_cost }}</td>
+            <td>{{ result.cost | number: 4 }}</td>
+            <td>{{ key }}</td>
+        </tr>
 
-<network-speed-graph network-speeds="networkSpeeds"></network-speed-graph>
+    </table>
+
+    <cpu-usage-histogram cpu-usages="cpuUsages"></cpu-usage-histogram>
+
+    <network-speeds-histogram network-speeds="networkSpeeds"></network-speeds-histogram>
+
+    <network-counters-table counters="networkCounters"></network-counters-table>
+</div>
+<div class="loader" ng-hide="loaded">
+    <p><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></p>
+    <p><span>Loading results..</span></p>
+</div>
+
 
 <div class="selectedConfiguration" ng-show="selected">
     <h4>Selected Configuration:</h4>
