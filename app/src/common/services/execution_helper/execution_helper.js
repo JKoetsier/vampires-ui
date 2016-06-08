@@ -14,17 +14,19 @@
                 var currentExecution = null;
 
                 var steps = [
-                    '/workload',
-                    '/resources',
-                    '/sample',
-                    '/results',
-                    '/execute'
+                    'workload',
+                    'resources',
+                    'sample',
+                    'results',
+                    'execute'
                 ];
 
                 var dependencies = {
-                    '/resources': [ 'workload' ],
-                    '/sample': [ 'workload', 'configuration']
+                    'resources': [ 'workload' ],
+                    'sample': [ 'workload', 'configuration']
                 };
+
+                var isFullExecution = false;
 
                 methods.setWorkload = function setWorkload(workload) {
                     newExecution.workload = workload;
@@ -69,16 +71,14 @@
                 };
 
                 methods.doNextStep = function doNextStep() {
-                    var current = $location.path();
+                    var current = $location.path().split('/')[1];
                     var nextId = steps.indexOf(current) + 1;
 
                     var nextstep = steps[nextId];
-
                     var cont = true;
 
 
                     if (dependencies[nextstep]) {
-                        console.log('have dependencies');
 
                         dependencies[nextstep].forEach(function(dep) {
                             if (!newExecution[dep]) {
@@ -88,9 +88,17 @@
                     }
 
                     if (cont) {
-                        $location.path(steps[nextId]);
+                        $location.path('/' + nextstep);
                     }
 
+                };
+
+                methods.isFull = function isFull() {
+                    return isFullExecution;
+                };
+
+                methods.setFull = function setFull() {
+                    isFullExecution = true;
                 };
 
                 return methods;

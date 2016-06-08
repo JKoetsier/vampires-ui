@@ -307,6 +307,7 @@
                     if (!value.startsWith('cost')) {
                         continue;
                     }
+
                     splitted = value.split(':');
                     statType = splitted.length;
 
@@ -317,7 +318,7 @@
                     key = provider + ':' + instance;
 
                     if (!(key in costStatistics)) {
-                        costStatistics[key] = {};
+                        continue;
                     }
 
                     costStatistics[key].instance_cost = data.stats.values[value].value;

@@ -121,6 +121,7 @@ div.row.actions {
 .stats_block {
   clear: both;
   position: relative;
+  margin-bottom: 20px;
 }
 div.loader {
   text-align: center;
@@ -128,4 +129,23 @@ div.loader {
 button.execution-action {
   float: right;
   margin-bottom: 10px;
+}
+input.resourceCnt {
+  width: 100px !important;
+}
+.actions button {
+  float: right;
+}
+.actions .message {
+  font-style: italic;
+  font-weight: bold;
+}
+.welcome {
+  text-align: center;
+}
+.padding-left-5 {
+  padding-left: 5px;
+}
+.network_speeds .selection {
+  margin-bottom: 5px;
 }

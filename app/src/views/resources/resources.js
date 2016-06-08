@@ -17,6 +17,9 @@
 
                 $scope.selected = {};
                 $scope.providers = [];
+                $scope.counts = {};
+
+                $scope.executionType = 'sample';
 
                 $scope.toggleSelected = function(provider, type) {
 
@@ -33,6 +36,7 @@
                         delete $scope.selected[provider][i];
                     }
                 };
+
 
                 $scope.isSelected = function(provider, type) {
                     if (!(provider in $scope.selected)) {
@@ -57,11 +61,12 @@
 
                     for (var provider in $scope.selected) {
                         $scope.selected[provider].forEach(function(type) {
+                            var count = $scope.counts[provider][type] || 1;
 
                             resources.push(new Resource({
                                 provider: provider,
                                 type: type,
-                                count: 1
+                                count: count
                             }));
 
                         });
@@ -74,13 +79,16 @@
                         ExecutionHelperService.setConfiguration(conf);
 
                         cb();
-                        console.log(conf);
                     });
 
                 };
 
                 $scope.run = function run() {
                     $scope.createConfiguration(function() {
+                        if ($scope.executionType == 'full') {
+                            ExecutionHelperService.setFull();
+                        }
+
                         ExecutionHelperService.doNextStep();
                     });
                 };
@@ -89,6 +97,15 @@
 
                     providers.forEach(function(data) {
                         $scope.providers.push(data);
+
+                        for (var p in $scope.providers) {
+                            $scope.counts[$scope.providers[p].provider] = {};
+
+                            $scope.providers[p].resources.forEach(function(r) {
+                                $scope.counts[$scope.providers[p].provider][r.type] = 1;
+                            });
+                        }
+
                     });
                 });
             }]);

@@ -122,6 +122,9 @@
 
                             total++;
                         }
+                        if (total === 0) {
+                            return;
+                        }
 
                         for (var k in histogram) {
                            valuesList.push({

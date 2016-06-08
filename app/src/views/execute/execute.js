@@ -27,6 +27,7 @@
                 $scope.stopped = false;
 
                 $scope.execution = null;
+                $scope.type = null;
 
                 var pollingInterval;
 
@@ -36,15 +37,17 @@
                 $scope.startExecution = function startExecution() {
                     var startLine;
 
-                    if ($scope.settings.type == 'sample') {
-                        startLine = 'Preparing Sampling..';
-                    } else {
+                    if (ExecutionHelperService.isFull() || $scope.settings.type != 'sample') {
                         startLine = 'Preparing Execution..';
+                        $scope.type = 'full';
+                    } else {
+                        startLine = 'Preparing Sampling..';
+                        $scope.type = 'sample';
                     }
 
                     $scope.addProgressLine(startLine);
 
-                    ExecutionHelperService.createExecution($scope.settings.type, function(exec) {
+                    ExecutionHelperService.createExecution($scope.type, function(exec) {
                         $scope.execution = exec;
                         $scope.startPolling();
                     });
@@ -75,10 +78,19 @@
                     ExecutionHelperService.doNextStep();
                 };
 
+                function isEmpty(obj) {
+                    for(var prop in obj) {
+                        if(obj.hasOwnProperty(prop))
+                            return false;
+                    }
+
+                    return JSON.stringify(obj) === JSON.stringify({});
+                }
+
                 $scope.checkStatus = function checkStatus() {
 
                     $scope.execution.getStatus(function(status) {
-                        if (status.info.status == 'running') {
+                        if (status.info.status == 'running' && !isEmpty(status.info.status.histograms)) {
                             ExecutionDataExtractService.setData(status.info);
                             $scope.cpuUsages = ExecutionDataExtractService.getCpuLoads();
                             $scope.networkSpeeds = ExecutionDataExtractService.getNetworkSpeeds();

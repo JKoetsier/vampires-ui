@@ -2,7 +2,9 @@
 
 <!--<nvd3 options="options" data="data"></nvd3>-->
 
+<div class="error" ng-show="errorMessage"><p class="error">{{ errorMessage }}</p></div>
 <div ng-if="loaded">
+
     <table class="table table-bordered">
         <tr>
             <th ng-click="sortBy = 'duration'; sortReverse = !sortReverse">Avg. Duration (ms)
@@ -17,8 +19,8 @@
                 <span ng-show="sortBy == 'timecost' && !sortReverse" class="fa fa-caret-down"></span>
                 <span ng-show="sortBy == 'timecost' && sortReverse" class="fa fa-caret-up"></span>
             </th>
-
             <th>Resources</th>
+            <th ng-show="showCreateExecution">Count</th>
         </tr>
 
         <tr ng-class="result == selected ? 'info' : ''" ng-repeat="(key, result) in costStats | orderBy: sortBy : !sortReverse"
@@ -27,9 +29,17 @@
             <td>{{ result.instance_cost }}</td>
             <td>{{ result.cost | number: 4 }}</td>
             <td>{{ key }}</td>
+            <td ng-show="showCreateExecution"><input class="form-control resourceCnt" type="number" step="1" min="0" ng-model="result.count" /></td>
         </tr>
 
     </table>
+    <div class="actions">
+        <div ng-show="showCreateExecution" class="message">
+            <p>Select the number of instances to use from each type and click Execute</p>
+        </div>
+        <button class="btn btn-info" ng-hide="showCreateExecution || isFull" ng-click="showCreateExecution = true">Configure Full Execution</button>
+        <button class="btn btn-success" ng-show="showCreateExecution" ng-click="doFull()">Execute</button>
+    </div>
 
     <cpu-usage-histogram cpu-usages="cpuUsages"></cpu-usage-histogram>
 

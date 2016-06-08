@@ -2,9 +2,10 @@
     <div class="col-md-12">
         <p>a. Select a workload from the list:</p>
 
-        <div class="col-sm-2"></div>
-        <div class="col-sm-10">
+
+        <div class="col-sm-10 col-sm-offset-2 padding-left-5">
             <form class="form-inline">
+
                 <select class="form-control" ng-model="selectTask" ng-options="(w.created_at + ': ' +w.description) for w in workloads">
                 </select>
                 <button ng-click="setWorkload(selectTask)" class="btn btn-default">Select Workload</button>

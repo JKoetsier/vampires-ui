@@ -3,7 +3,7 @@
 
     angular.module('myApp.models.execution', [])
 
-        .factory('Execution', ['ApiClientService', function(ApiClientService) {
+        .factory('Execution', ['ApiClientService', 'Workload', 'Configuration', function(ApiClientService, Workload, Configuration) {
 
             function Execution(workload, configuration, type) {
                 this.configuration = configuration;
@@ -36,6 +36,18 @@
                 execution.setFromJson(jsonObj);
 
                 return execution;
+            };
+
+            Execution.prototype.getConfiguration = function(cb) {
+                Configuration.get(this.configuration.id, function(configuration) {
+                    cb(configuration);
+                });
+            };
+
+            Execution.prototype.getWorkload = function(cb) {
+                Workload.get(this.workload.id, function(workload) {
+                    cb(workload);
+                });
             };
 
             Execution.prototype.start = function(cb) {

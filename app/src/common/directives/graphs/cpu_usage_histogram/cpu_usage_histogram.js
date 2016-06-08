@@ -15,7 +15,6 @@
                 scope: true,
                 link: function (scope, elem, attrs) {
 
-
                     scope.$watch('update', function() {
                         scope.updateData();
                     });
@@ -70,7 +69,6 @@
                             } else {
                                 return;
                             }
-
                         }
 
                         values = {};
@@ -93,6 +91,9 @@
                             }
                         }
 
+                        if (cnt === 0) {
+                            return;
+                        }
                         var valuesList = [];
 
                         for (var k in values) {
@@ -112,7 +113,8 @@
                                 values: valuesList
                             }
                         ];
-                        scope.stats = scope.selected[key];
+
+                        //scope.stats = scope.selected[key];
 
                         scope.update = false;
 

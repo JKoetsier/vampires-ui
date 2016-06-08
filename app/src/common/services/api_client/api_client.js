@@ -43,7 +43,6 @@
             };
 
             calls.workloads.getAll = function(cb) {
-                console.log('Get all workloads');
                 $http.get(host + '/workloads', config).then(
                     function successCallback(response) {
                         cb(response.data);
@@ -174,8 +173,6 @@
                     type: type
                 };
 
-                console.log(data);
-
                 $http.post(host + '/executions', data, config).then(
                     function successCallback(response) {
                         cb(response.data);
@@ -190,6 +187,17 @@
                 $http.get(host + '/executions', config).then(
                     function successCallback(response) {
                         cb(response.data);
+                    }
+                );
+            };
+
+            calls.executions.get = function(execution_id, cb) {
+                $http.get(host + '/executions/' + execution_id, config).then(
+                    function successCallback(response) {
+                        cb(response.data);
+                    },
+                    function errorCallback(response) {
+
                     }
                 );
             };
