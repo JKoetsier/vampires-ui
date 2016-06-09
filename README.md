@@ -1,6 +1,9 @@
 # Vampires Frontend
 
-## Usage:
+## Local usage:
+
+* The [Vampires back-end](https://bitbucket.org/cdumitru/vampires-akka)
+  has to be installed.
 
 * Install Node.js and NPM. These are needed for dependency management.
 
@@ -19,3 +22,4 @@
         grunt run
 
 * Navigate to http://localhost:8080 in your browser.
+
