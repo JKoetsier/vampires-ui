@@ -38,13 +38,8 @@
         };
 
         factory.addError = function addError(error) {
-            console.log(error);
             errors.push(error);
             factory.hasNewError = true;
-        };
-
-        factory.clearErrors = function clearErrors() {
-            errors = [];
         };
 
         return factory;

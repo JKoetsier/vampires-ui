@@ -56,11 +56,11 @@
     <div class="panel panel-default">
         <div class="panel-heading" ng-bind="$root.title">Vampires</div>
         <div class="panel-body">
-            <div class="errors" ng-controller="ErrorController">
-                <div class="alert alert-danger" ng-show="errors">
-                    <p ng-repeat="error in errors">{{ error.name }}: {{ error.message }}</p>
+            <div class="globalErrors" ng-controller="ErrorController">
+                <div ng-repeat="error in errors track by $index" class="alert alert-danger" ng-show="errors.length > 0">
+                    <span class="dismiss" ng-click="dismiss($index)">x</span>
+                    <p >{{ error.name }}: {{ error.message }}</p>
                 </div>
-
             </div>
             <div class="container" ng-view role="main"></div>
         </div>

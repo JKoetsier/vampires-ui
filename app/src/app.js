@@ -43,6 +43,7 @@
         .controller('ErrorController', [
             '$scope',
             'ErrorHandlerService',
+            '$timeout',
             ErrorController
         ])
         .factory('$exceptionHandler', [
@@ -58,15 +59,13 @@
         $rootScope.$on('$routeChangeStart', function (event, curRoute,
                                                       prevRoute) {
 
-            ErrorHandlerService.clearErrors();
-
             if (!AuthService.isLoggedIn() &&
                 !$location.path().startsWith('/login')) {
 
                 $location.path('/login' + $location.path());
             }
         });
-        $rootScope.$on("$routeChangeSuccess", function (event, currentRoute,
+        $rootScope.$on('$routeChangeSuccess', function (event, currentRoute,
                                                         previousRoute) {
 
             if (angular.isUndefined($route.current.title)) {
@@ -83,7 +82,7 @@
         };
     }
 
-    function ErrorController($scope, ErrorHandlerService) {
+    function ErrorController($scope, ErrorHandlerService, $timeout) {
 
         $scope.$watch(function() {
             return ErrorHandlerService.hasNewError;
@@ -93,6 +92,10 @@
             }
 
         });
+
+        $scope.dismiss = function dismiss(index) {
+            $scope.errors.splice(index, 1);
+        };
 
     }
 }());
