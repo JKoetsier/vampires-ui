@@ -36,7 +36,7 @@
           '$rootScope',
           '$route',
           'AuthService',
-          'ErrorHandlerService',
+          'ExecutionHelperService',
           '$location',
           runFunction
       ])
@@ -55,15 +55,28 @@
         $routeProvider.otherwise({redirectTo: '/start'});
     }
 
-    function runFunction ($rootScope, $route, AuthService, ErrorHandlerService, $location) {
+    function runFunction ($rootScope, $route, AuthService, ExecutionHelperService, $location) {
         $rootScope.$on('$routeChangeStart', function (event, curRoute,
                                                       prevRoute) {
 
-            if (!AuthService.isLoggedIn() &&
-                !$location.path().startsWith('/login')) {
 
-                $location.path('/login' + $location.path());
+        /* Check if have dependencies. If not, prevent route change. If direct link,
+         * redirect to welcome screen
+         */
+        if (!ExecutionHelperService.hasAllDependencies($location.path().replace('/', ''))) {
+            if (!prevRoute) {
+                $location.path('/');
+            } else {
+                event.preventDefault();
             }
+
+        }
+
+        if (!AuthService.isLoggedIn() &&
+            !$location.path().startsWith('/login')) {
+
+            $location.path('/login' + $location.path());
+        }
         });
         $rootScope.$on('$routeChangeSuccess', function (event, currentRoute,
                                                         previousRoute) {

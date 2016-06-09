@@ -90,22 +90,27 @@
             var nextId = steps.indexOf(current) + 1;
 
             var nextstep = steps[nextId];
+
+
+            if (methods.hasAllDependencies(nextstep)) {
+                $location.path('/' + nextstep);
+            }
+
+        };
+
+        methods.hasAllDependencies = function hasAllDependencies(page) {
             var cont = true;
 
+            if (dependencies[page]) {
 
-            if (dependencies[nextstep]) {
-
-                dependencies[nextstep].forEach(function (dep) {
+                dependencies[page].forEach(function (dep) {
                     if (!newExecution[dep]) {
                         cont = false;
                     }
                 });
             }
 
-            if (cont) {
-                $location.path('/' + nextstep);
-            }
-
+            return cont;
         };
 
         methods.isFull = function isFull() {

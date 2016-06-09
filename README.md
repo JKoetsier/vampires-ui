@@ -10,10 +10,10 @@
         yum install nodejs npm
 
     or
-            dnf install nodejs npm
+        dnf install nodejs npm
 
     or
-            apt-get install nodejs npm
+        apt-get install nodejs npm
 
 
 * In project root, do:
