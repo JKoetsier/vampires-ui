@@ -1,39 +1,65 @@
+/**
+ * Login View
+ * @namespace Views
+ */
+
 (function() {
     'use strict';
 
-    angular.module('myApp.login', ['ngRoute'])
+    angular
+        .module('vampUi.views.login', ['ngRoute'])
+        .config(['$routeProvider', LoginRoutes])
+        .controller('LoginController', [
+            '$scope',
+            'AuthService',
+            '$routeParams',
+            '$location',
+            LoginController
+        ]);
 
-        .config(['$routeProvider', function($routeProvider) {
-            $routeProvider.when('/login/:redirect', {
-                templateUrl: 'views/login/login.html',
-                controller: 'LoginController',
-                title: 'Login'
-            }).when('/login', {
-                templateUrl: 'views/login/login.html',
-                controller: 'LoginController',
-                title: 'Login'
-            });
-        }])
 
-        .controller('LoginController', ['$scope', 'Auth', '$routeParams', '$location', function($scope, Auth, $routeParams, $location) {
+    /**
+     * @namespace LoginRoutes
+     * @desc Routes for the login view
+     * @memberOf Views
+     */
+    function LoginRoutes($routeProvider) {
+        $routeProvider.when('/login/:redirect', {
+            templateUrl: 'views/login/login.html',
+            controller: 'LoginController',
+            title: 'Login'
+        }).when('/login', {
+            templateUrl: 'views/login/login.html',
+            controller: 'LoginController',
+            title: 'Login'
+        });
+    }
 
-            $scope.error = null;
 
-            $scope.login = function login() {
-                if ($scope.user && $scope.pass) {
-                    Auth.logIn($scope.user, $scope.pass, function(result) {
-                        if (result) {
-                            if ($routeParams.redirect) {
-                                $location.path($routeParams.redirect);
-                            } else {
-                                $location.path('/');
-                            }
+    /**
+     * @namespace LoginController
+     * @desc Controller for the login view
+     * @memberOf Views
+     */
+    function LoginController($scope, Auth, $routeParams, $location) {
+
+        $scope.error = null;
+
+        $scope.login = function login() {
+            if ($scope.user && $scope.pass) {
+                Auth.logIn($scope.user, $scope.pass, function (result) {
+                    if (result) {
+                        if ($routeParams.redirect) {
+                            $location.path($routeParams.redirect);
                         } else {
-                            $scope.error = 'Invalid credentials';
+                            $location.path('/');
                         }
-                    });
-                }
-            };
-        }]);
+                    } else {
+                        $scope.error = 'Invalid credentials';
+                    }
+                });
+            }
+        };
+    }
 }());
 

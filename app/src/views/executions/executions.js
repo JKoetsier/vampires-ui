@@ -1,29 +1,51 @@
+/**
+ * Executions View
+ * @namespace Views
+ */
+
 (function() {
     'use strict';
 
-    angular.module('myApp.executions', ['ngRoute'])
+    angular
+        .module('vampUi.views.executions', ['ngRoute'])
+        .config(['$routeProvider', ExecutionsRoutes])
+        .controller('ExecutionsController', [
+            '$scope',
+            'Execution',
+            ExecutionsController
+        ]);
 
-        .config(['$routeProvider', function($routeProvider) {
-            $routeProvider.when('/executions', {
-                templateUrl: 'views/executions/executions.html',
-                controller: 'ExecutionsController',
-                title: 'Executions'
+
+    /**
+     * @namespace ExecutionsRoutes
+     * @desc Routes for the executions view
+     * @memberOf Views
+     */
+    function ExecutionsRoutes($routeProvider) {
+        $routeProvider.when('/executions', {
+            templateUrl: 'views/executions/executions.html',
+            controller: 'ExecutionsController',
+            title: 'Executions'
+        });
+    }
+
+    /**
+     * @namespace ExecutionsController
+     * @desc Controller for the executions view
+     * @memberOf Views
+     */
+    function ExecutionsController($scope, Execution) {
+
+        $scope.getExecutions = function getExecutions() {
+            Execution.getAll(function (executions) {
+                $scope.executions = executions;
+
+                console.log($scope.executions);
             });
-        }])
+        };
 
-        .controller('ExecutionsController', ['$scope', 'ExecutionHelperService', 'Execution',
-            function($scope, ExecutionHelperService, Execution) {
+        $scope.getExecutions();
 
-                $scope.getExecutions = function getExecutions() {
-                    Execution.getAll(function(executions) {
-                        $scope.executions = executions;
-
-                        console.log($scope.executions);
-                    });
-                };
-
-                $scope.getExecutions();
-
-            }]);
+    }
 }());
 

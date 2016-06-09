@@ -1,113 +1,138 @@
+/**
+ * Resources Controller
+ * @namespace Controllers
+ */
+
 (function() {
     'use strict';
 
-    angular.module('myApp.resources', ['ngRoute'])
-
-        .config(['$routeProvider', function($routeProvider) {
-            $routeProvider.when('/resources', {
-                templateUrl: 'views/resources/resources.html',
-                controller: 'ResourcesController',
-                title: 'Select Resources'
-            });
-        }])
-
-        .controller('ResourcesController', ['$scope', 'ApiClientService', 'ExecutionHelperService',
-            'Configuration', 'Resource',
-            function($scope, ApiClientService, ExecutionHelperService, Configuration, Resource) {
-
-                $scope.selected = {};
-                $scope.providers = [];
-                $scope.counts = {};
-
-                $scope.executionType = 'sample';
-
-                $scope.toggleSelected = function(provider, type) {
-
-                    if (!(provider in $scope.selected)) {
-                        $scope.selected[provider] = [];
-                    }
-
-                    var i = $scope.selected[provider].indexOf(type);
-
-                    if (i == -1) {
-                        $scope.selected[provider].push(type);
-                    }
-                    else {
-                        delete $scope.selected[provider][i];
-                    }
-                };
+    angular
+        .module('vampUi.views.resources', ['ngRoute'])
+        .config(['$routeProvider', ResourcesRoutes])
+        .controller('ResourcesController', [
+            '$scope',
+            'ApiClientService',
+            'ExecutionHelperService',
+            'Configuration',
+            'Resource',
+            ResourcesController
+        ]);
 
 
-                $scope.isSelected = function(provider, type) {
-                    if (!(provider in $scope.selected)) {
-                        return false;
-                    }
+    /**
+     * @namespace ResourcesRoutes
+     * @desc Routes for the resources view
+     * @memberOf Views
+     */
+    function ResourcesRoutes($routeProvider) {
+        $routeProvider.when('/resources', {
+            templateUrl: 'views/resources/resources.html',
+            controller: 'ResourcesController',
+            title: 'Select Resources'
+        });
+    }
 
-                    if ($scope.selected[provider].indexOf(type) == -1) {
-                        return false;
-                    }
+    /**
+     * @namespace ResourcesController
+     * @desc Controller for the resources view
+     * @memberOf Controllers
+     */
+    function ResourcesController($scope, ApiClientService,
+                                 ExecutionHelperService, Configuration,
+                                 Resource) {
 
-                    return true;
-                };
+        $scope.selected = {};
+        $scope.providers = [];
+        $scope.counts = {};
+        $scope.executionType = 'sample';
 
-                $scope.createConfiguration = function(cb) {
+        $scope.toggleSelected = function (provider, type) {
+
+            if (!(provider in $scope.selected)) {
+                $scope.selected[provider] = [];
+            }
+
+            var i = $scope.selected[provider].indexOf(type);
+
+            if (i == -1) {
+                $scope.selected[provider].push(type);
+            }
+            else {
+                delete $scope.selected[provider][i];
+            }
+        };
 
 
-                    if ($scope.resourcesConfig.$invalid) {
-                        return;
-                    }
+        $scope.isSelected = function (provider, type) {
+            if (!(provider in $scope.selected)) {
+                return false;
+            }
 
-                    var resources = [];
+            if ($scope.selected[provider].indexOf(type) == -1) {
+                return false;
+            }
 
-                    for (var provider in $scope.selected) {
-                        $scope.selected[provider].forEach(function(type) {
-                            var count = $scope.counts[provider][type] || 1;
+            return true;
+        };
 
-                            resources.push(new Resource({
-                                provider: provider,
-                                type: type,
-                                count: count
-                            }));
+        $scope.createConfiguration = function (cb) {
 
-                        });
-                    }
 
-                    var conf = new Configuration();
-                    conf.setDescription($scope.description);
-                    conf.setResources(resources);
-                    conf.save(function(conf) {
-                        ExecutionHelperService.setConfiguration(conf);
+            if ($scope.resourcesConfig.$invalid) {
+                return;
+            }
 
-                        cb();
-                    });
+            var resources = [];
 
-                };
+            for (var provider in $scope.selected) {
+                $scope.selected[provider].forEach(function (type) {
+                    var count = $scope.counts[provider][type] || 1;
 
-                $scope.run = function run() {
-                    $scope.createConfiguration(function() {
-                        if ($scope.executionType == 'full') {
-                            ExecutionHelperService.setFull();
-                        }
+                    resources.push(new Resource({
+                        provider: provider,
+                        type: type,
+                        count: count
+                    }));
 
-                        ExecutionHelperService.doNextStep();
-                    });
-                };
-
-                ApiClientService.providers.getAll(function(providers) {
-
-                    providers.forEach(function(data) {
-                        $scope.providers.push(data);
-
-                        for (var p in $scope.providers) {
-                            $scope.counts[$scope.providers[p].provider] = {};
-
-                            $scope.providers[p].resources.forEach(function(r) {
-                                $scope.counts[$scope.providers[p].provider][r.type] = 1;
-                            });
-                        }
-
-                    });
                 });
-            }]);
+            }
+
+            var conf = new Configuration();
+            conf.setDescription($scope.description);
+            conf.setResources(resources);
+            conf.save(function (conf) {
+                ExecutionHelperService.setConfiguration(conf);
+
+                cb();
+            });
+
+        };
+
+        $scope.run = function run() {
+            $scope.createConfiguration(function () {
+                if ($scope.executionType == 'full') {
+                    ExecutionHelperService.setFull();
+                }
+
+                ExecutionHelperService.doNextStep();
+            });
+        };
+
+        ApiClientService.providers.getAll(function (providers) {
+
+            providers.forEach(function (data) {
+                $scope.providers.push(data);
+
+                for (var p in $scope.providers) {
+                    $scope.counts[$scope.providers[p].provider] = {};
+
+                    $scope.providers[p].resources.forEach(function (r) {
+                        $scope.counts[$scope.providers[p].provider][r.type] = 1;
+                    });
+                }
+
+            });
+        });
+    }
 }());
 

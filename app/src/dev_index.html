@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html lang="en" ng-app="vampUi" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="vampUi" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="vampUi" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="vampUi" class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -56,6 +56,12 @@
     <div class="panel panel-default">
         <div class="panel-heading" ng-bind="$root.title">Vampires</div>
         <div class="panel-body">
+            <div class="errors" ng-controller="ErrorController">
+                <div class="alert alert-danger" ng-show="errors">
+                    <p ng-repeat="error in errors">{{ error.name }}: {{ error.message }}</p>
+                </div>
+
+            </div>
             <div class="container" ng-view role="main"></div>
         </div>
     </div>
@@ -78,14 +84,13 @@
 <script type="text/javascript" src="bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
 
 <script type="text/javascript" src="app.js"></script>
-<script type="text/javascript" src="common/directives/graphs/network_speeds/network_speed_graph.js"></script>
-<script type="text/javascript" src="common/directives/graphs/cpu_usage/cpu_usage_graph.js"></script>
 <script type="text/javascript" src="common/directives/tables/network_counters/network_counters_table.js"></script>
 <script type="text/javascript" src="common/directives/graphs/cpu_usage_histogram/cpu_usage_histogram.js"></script>
 <script type="text/javascript" src="common/directives/textarea_tail/textarea_tail.js"></script>
 <script type="text/javascript" src="common/directives/statistics_tabs/statistics_tabs.js"></script>
 <script type="text/javascript" src="common/directives/graphs/network_speeds_histogram/network_speeds_histogram.js"></script>
 <script type="text/javascript" src="common/directives/graphs/histogram_stats/histogram_stats.js"></script>
+<script type="text/javascript" src="common/filters/bytes/bytes.js"></script>
 <script type="text/javascript" src="common/models/configuration.js"></script>
 <script type="text/javascript" src="common/models/resource.js"></script>
 <script type="text/javascript" src="common/models/workload.js"></script>
@@ -94,6 +99,7 @@
 <script type="text/javascript" src="common/services/execution_helper/execution_helper.js"></script>
 <script type="text/javascript" src="common/services/auth/auth.js"></script>
 <script type="text/javascript" src="common/services/execution_data_extract/execution_data_extract.js"></script>
+<script type="text/javascript" src="common/services/error_handler/error_handler.js"></script>
 <script type="text/javascript" src="config.js"></script>
 <script type="text/javascript" src="views/execute/execute.js"></script>
 <script type="text/javascript" src="views/execute/execute_test.js"></script>
@@ -103,8 +109,8 @@
 <script type="text/javascript" src="views/results/results_test.js"></script>
 <script type="text/javascript" src="views/sample/sample.js"></script>
 <script type="text/javascript" src="views/sample/sample_test.js"></script>
-<script type="text/javascript" src="views/start/start.js"></script>
-<script type="text/javascript" src="views/start/start_test.js"></script>
+<script type="text/javascript" src="views/welcome/welcome.js"></script>
+<script type="text/javascript" src="views/welcome/welcome_test.js"></script>
 <script type="text/javascript" src="views/workload/workload.js"></script>
 <script type="text/javascript" src="views/workload/workload_test.js"></script>
 <script type="text/javascript" src="views/executions/executions.js"></script>

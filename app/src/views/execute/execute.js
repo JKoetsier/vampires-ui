@@ -1,159 +1,187 @@
+/**
+ * Execute View
+ * @namespace Views
+ */
+
+
 (function() {
     'use strict';
 
-    angular.module('myApp.execute', ['ngRoute'])
+    angular
+        .module('vampUi.views.execute', ['ngRoute'])
+        .config(['$routeProvider', ExecuteRoutes])
+        .controller('ExecuteController', [
+            'ExecutionHelperService',
+            'ExecutionDataExtractService',
+            '$scope',
+            '$route',
+            '$interval',
+            'EXECUTION_SETTINGS',
+            ExecuteController
+        ]);
 
-        .config(['$routeProvider', function($routeProvider) {
-            $routeProvider.when('/execute', {
-                templateUrl: 'views/execute/execute.html',
-                controller: 'ExecuteController',
-                title: 'Execute',
-                type: 'full'
+
+    /**
+     * @namespace ExecuteRoutes
+     * @desc Routes for the execute view
+     * @memberOf Views
+     */
+    function ExecuteRoutes($routeProvider) {
+        $routeProvider.when('/execute', {
+            templateUrl: 'views/execute/execute.html',
+            controller: 'ExecuteController',
+            title: 'Execute',
+            type: 'full'
+        });
+    }
+
+    /**
+     * @namespace ExecuteController
+     * @desc Controller for the execute view
+     * @memberOf Views
+     */
+    function ExecuteController(ExecutionHelperService,
+                               ExecutionDataExtractService, $scope, $route,
+                               $interval,
+                               EXECUTION_SETTINGS) {
+
+        $scope.done = false;
+        $scope.status = null;
+        $scope.niceStatus = 'Preparing Execution..';
+        $scope.executionId = null;
+        $scope.lastUpdate = null;
+        $scope.progress = 0;
+        $scope.progressText = '';
+        $scope.stopped = false;
+
+        $scope.execution = null;
+        $scope.type = null;
+
+        var pollingInterval;
+
+        /* Set 'full' or 'sample' settings */
+        $scope.settings = EXECUTION_SETTINGS[$route.current.$$route.type];
+
+        $scope.startExecution = function startExecution() {
+            var startLine;
+
+            if (ExecutionHelperService.isFull() || $scope.settings.type != 'sample') {
+                startLine = 'Preparing Execution..';
+                $scope.type = 'full';
+            } else {
+                startLine = 'Preparing Sampling..';
+                $scope.type = 'sample';
+            }
+
+            $scope.addProgressLine(startLine);
+
+            ExecutionHelperService.createExecution($scope.type, function (exec) {
+                $scope.execution = exec;
+                $scope.startPolling();
             });
-        }])
+        };
 
-        .controller('ExecuteController', ['ExecutionHelperService', 'ExecutionDataExtractService', 'ApiClientService',
-            '$scope', '$route', '$interval', 'EXECUTION_SETTINGS',
-            function(ExecutionHelperService, ExecutionDataExtractService, ApiClientService, $scope, $route, $interval,
-                     EXECUTION_SETTINGS) {
+        $scope.addProgressLine = function addProgressLine(line) {
+            if ($scope.progressText !== '') {
+                $scope.progressText += '\r\n';
+            }
+            $scope.progressText += line;
+        };
 
-                $scope.done = false;
-                $scope.status = null;
-                $scope.niceStatus = 'Preparing Execution..';
-                $scope.executionId = null;
-                $scope.lastUpdate = null;
-                $scope.progress = 0;
-                $scope.progressText = '';
-                $scope.stopped = false;
+        $scope.startPolling = function startPolling() {
+            pollingInterval = $interval(function () {
+                $scope.checkStatus();
+            }, $scope.settings.pollingInterval);
+        };
 
-                $scope.execution = null;
-                $scope.type = null;
+        $scope.setStatus = function setStatus(status) {
+            if (status) {
+                $scope.status = status;
+                $scope.niceStatus = status[0].toUpperCase() + status.substr(1);
+            }
 
-                var pollingInterval;
+        };
 
-                /* Set 'full' or 'sample' settings */
-                $scope.settings = EXECUTION_SETTINGS[$route.current.$$route.type];
+        $scope.toResults = function toResults() {
+            ExecutionHelperService.doNextStep();
+        };
 
-                $scope.startExecution = function startExecution() {
-                    var startLine;
+        function isEmpty(obj) {
+            for (var prop in obj) {
+                if (obj.hasOwnProperty(prop))
+                    return false;
+            }
 
-                    if (ExecutionHelperService.isFull() || $scope.settings.type != 'sample') {
-                        startLine = 'Preparing Execution..';
-                        $scope.type = 'full';
-                    } else {
-                        startLine = 'Preparing Sampling..';
-                        $scope.type = 'sample';
-                    }
+            return JSON.stringify(obj) === JSON.stringify({});
+        }
 
-                    $scope.addProgressLine(startLine);
+        $scope.checkStatus = function checkStatus() {
 
-                    ExecutionHelperService.createExecution($scope.type, function(exec) {
-                        $scope.execution = exec;
-                        $scope.startPolling();
-                    });
-                };
+            $scope.execution.getStatus(function (status) {
+                if (status.info.status == 'running' && !isEmpty(status.info.status.histograms)) {
+                    ExecutionDataExtractService.setData(status.info);
+                    $scope.cpuUsages = ExecutionDataExtractService.getCpuLoads();
+                    $scope.networkSpeeds = ExecutionDataExtractService.getNetworkSpeeds();
+                    $scope.statsAvailable = true;
+                    $scope.started = true;
+                }
+                status = status.info;
 
-                $scope.addProgressLine = function addProgressLine(line) {
-                    if ($scope.progressText !== '') {
-                        $scope.progressText += '\r\n';
-                    }
-                    $scope.progressText += line;
-                };
+                $scope.update = true;
 
-                $scope.startPolling = function startPolling() {
-                    pollingInterval = $interval(function() {
-                        $scope.checkStatus();
-                    }, $scope.settings.pollingInterval);
-                };
-
-                $scope.setStatus = function setStatus(status) {
-                    if (status) {
-                        $scope.status = status;
-                        $scope.niceStatus = status[0].toUpperCase() + status.substr(1);
-                    }
-
-                };
-
-                $scope.toResults = function toResults() {
-                    ExecutionHelperService.doNextStep();
-                };
-
-                function isEmpty(obj) {
-                    for(var prop in obj) {
-                        if(obj.hasOwnProperty(prop))
-                            return false;
-                    }
-
-                    return JSON.stringify(obj) === JSON.stringify({});
+                if ($scope.lastUpdate && $scope.lastUpdate == status.lastupdate_at) {
+                    /* No update */
+                    return;
                 }
 
-                $scope.checkStatus = function checkStatus() {
+                if (status.status == 'starting') {
+                    return;
+                }
 
-                    $scope.execution.getStatus(function(status) {
-                        if (status.info.status == 'running' && !isEmpty(status.info.status.histograms)) {
-                            ExecutionDataExtractService.setData(status.info);
-                            $scope.cpuUsages = ExecutionDataExtractService.getCpuLoads();
-                            $scope.networkSpeeds = ExecutionDataExtractService.getNetworkSpeeds();
-                            $scope.statsAvailable = true;
-                            $scope.started = true;
-                        }
-                        status = status.info;
+                $scope.lastUpdate = status.lastupdate_at;
 
-                        $scope.update = true;
+                $scope.progress = parseFloat((status.total - status.remaining) / status.total * 100).toFixed(1);
 
-                        if ($scope.lastUpdate && $scope.lastUpdate == status.lastupdate_at) {
-                            /* No update */
-                            return;
-                        }
+                var newLine = $scope.progress + '% done. ' +
+                    status.completed + ' of ' + status.total + ' completed';
 
-                        if (status.status == 'starting') {
-                            return;
-                        }
+                if (status.failed > 0) {
+                    newLine += ', ' + data.failed + ' failed';
+                }
 
-                        $scope.lastUpdate = status.lastupdate_at;
+                $scope.addProgressLine(newLine);
+                $scope.setStatus(status.status);
 
-                        $scope.progress = parseFloat((status.total - status.remaining) / status.total * 100).toFixed(1);
+                if (status.remaining === 0) {
+                    $scope.setFinished(status);
+                }
+            });
+        };
 
-                        var newLine = $scope.progress + '% done. ' +
-                            status.completed + ' of ' + status.total + ' completed';
+        $scope.setFinished = function setFinished(data) {
+            $scope.done = true;
+            $interval.cancel(pollingInterval);
+            $scope.addProgressLine('Done! ' + data.completed + ' of ' +
+                data.total + ' succeeded. ' + data.failed + ' failed');
+        };
 
-                        if (status.failed > 0) {
-                            newLine += ', ' + data.failed + ' failed';
-                        }
+        $scope.stopExecution = function stopExecution() {
+            $scope.execution.stop(function (data) {
+                $scope.stopped = true;
+                $scope.done = true;
+                $interval.cancel(pollingInterval);
 
-                        $scope.addProgressLine(newLine);
-                        $scope.setStatus(status.status);
+                $scope.addProgressLine('Cancelled by user');
+            });
+        };
 
-                        if (status.remaining === 0) {
-                            $scope.setFinished(status);
-                        }
-                    });
-                };
+        $scope.continueExecution = function continueExecution() {
+            $scope.execution.start(function (data) {
+                $scope.stopped = false;
+            });
+        };
 
-                $scope.setFinished = function setFinished(data) {
-                    $scope.done = true;
-                    $interval.cancel(pollingInterval);
-                    $scope.addProgressLine('Done! ' + data.completed + ' of ' +
-                        data.total + ' succeeded. ' + data.failed + ' failed');
-                };
-
-                $scope.stopExecution = function stopExecution() {
-                    $scope.execution.stop(function(data) {
-                        $scope.stopped = true;
-                        $scope.done = true;
-                        $interval.cancel(pollingInterval);
-
-                        $scope.addProgressLine('Cancelled by user');
-                    });
-                };
-
-                $scope.continueExecution = function continueExecution() {
-                    $scope.execution.start(function(data) {
-                        $scope.stopped = false;
-                    });
-                };
-
-                $scope.startExecution();
-            }]);
+        $scope.startExecution();
+    }
 }());
 

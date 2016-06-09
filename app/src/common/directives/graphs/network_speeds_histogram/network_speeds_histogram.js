@@ -1,17 +1,30 @@
+/**
+ * NetworkSpeedsHistogram Directive
+ * @namespace Directives
+ */
+
+
 (function() {
     'use strict';
 
-    var scripts = document.getElementsByTagName("script");
+    var scripts = document.getElementsByTagName('script');
     var currentScriptPath = scripts[scripts.length-1].src;
 
-    angular.module('myApp')
+    angular
+        .module('vampUi.directives.graphs.networkSpeedsHistogram', [])
+        .directive('networkSpeedsHistogram', networkSpeedsHistogram);
 
-
-        .directive('networkSpeedsHistogram', [function () {
+    /**
+     * @namespace NetworkSpeedsHistogram
+     * @desc Histogram for network speeds
+     * @memberOf Directives
+     */
+    function networkSpeedsHistogram() {
             return {
                 restrict: 'E',
                 replace: true,
-                templateUrl: currentScriptPath.replace('network_speeds_histogram.js', 'network_speeds_histogram.html'),
+                templateUrl: currentScriptPath.replace('network_speeds_histogram.js',
+                    'network_speeds_histogram.html'),
                 scope: true,
                 link: function (scope, elem, attrs) {
                     scope.selectedInterface = null;
@@ -37,29 +50,27 @@
                     };
 
                     scope.histogramOptions = {
-                        "chart": {
-                            "type": "multiBarChart",
-                            "height": 450,
-                            "margin": {
-                                "top": 20,
-                                "right": 20,
-                                "bottom": 45,
-                                "left": 45,
+                        chart: {
+                            type: "multiBarChart",
+                            height: 450,
+                            margin: {
+                                top: 20,
+                                right: 20,
+                                bottom: 45,
+                                left: 45,
                             },
                             showLegend: true,
                             showControls: false,
-                            "clipEdge": true,
-                            "duration": 500,
-                            "stacked": false,
-                            "xAxis": {
-                                "axisLabel": "Network Speeds",
+                            clipEdge: true,
+                            duration: 500,
+                            stacked: false,
+                            xAxis: {
+                                axisLabel: "Network Speeds",
                                 showMaxMin: true,
-                                //ticks: [0, 20, 40, 60, 80, 100],
-                                //domain: [0, 100]
                             },
-                            "yAxis": {
-                                "axisLabel": "Probability Density",
-                                "axisLabelDistance": -20,
+                            yAxis: {
+                                axisLabel: "Probability Density",
+                                axisLabelDistance: -20,
 
                             }
                         }
@@ -127,10 +138,10 @@
                         }
 
                         for (var k in histogram) {
-                           valuesList.push({
-                               x: k,
-                               y: histogram[k] / total
-                           });
+                            valuesList.push({
+                                x: k,
+                                y: histogram[k] / total
+                            });
                         }
                         scope.data.push({
                             key: iface + ' ' + type,
@@ -142,6 +153,5 @@
                     };
                 }
             };
-
-        }]);
+        }
 }());

@@ -24,6 +24,7 @@ imports.js.app = [
     'app/src/common/directives/statistics_tabs/statistics_tabs.js',
     'app/src/common/directives/graphs/network_speeds_histogram/network_speeds_histogram.js',
     'app/src/common/directives/graphs/histogram_stats/histogram_stats.js',
+    'app/src/common/filters/bytes/bytes.js',
     'app/src/common/models/configuration.js',
     'app/src/common/models/resource.js',
     'app/src/common/models/workload.js',
@@ -32,6 +33,7 @@ imports.js.app = [
     'app/src/common/services/execution_helper/execution_helper.js',
     'app/src/common/services/auth/auth.js',
     'app/src/common/services/execution_data_extract/execution_data_extract.js',
+    'app/src/common/services/error_handler/error_handler.js',
     'app/src/config.js',
     'app/src/views/execute/execute.js',
     'app/src/views/execute/execute_test.js',
@@ -41,8 +43,8 @@ imports.js.app = [
     'app/src/views/results/results_test.js',
     'app/src/views/sample/sample.js',
     'app/src/views/sample/sample_test.js',
-    'app/src/views/start/start.js',
-    'app/src/views/start/start_test.js',
+    'app/src/views/welcome/welcome.js',
+    'app/src/views/welcome/welcome_test.js',
     'app/src/views/workload/workload.js',
     'app/src/views/workload/workload_test.js',
     'app/src/views/executions/executions.js',
@@ -216,7 +218,6 @@ module.exports = function(grunt) {
                     }
                 }
             }
-
         },
         clean: ['.tmp/']
     }

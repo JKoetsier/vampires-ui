@@ -1,7 +1,12 @@
+/**
+ * Config
+ * @namespace Config
+ */
 (function() {
     'use strict';
 
-    angular.module('myApp')
+    angular
+        .module('vampUi.config', [])
         .constant('API_URL', 'http://localhost:4567')
         .constant('EXECUTION_SETTINGS', {
             full: {

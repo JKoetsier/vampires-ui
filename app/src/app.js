@@ -1,45 +1,98 @@
 (function() {
   'use strict';
 
-  angular
-      .module('myApp', [
-        'ngRoute',
-        'nvd3',
-        'myApp.resources',
-        'myApp.results',
-        'myApp.execute',
-        'myApp.start',
-        'myApp.sample',
-        'myApp.workload',
-        'myApp.api_client',
-        'myApp.auth',
-        'myApp.login',
-        'myApp.execution_helper',
-        'myApp.executions',
-        'myApp.execution_data',
-        'myApp.models.workload',
-        'myApp.models.configuration',
-        'myApp.models.resource',
-        'myApp.models.execution',
+    angular
+      .module('vampUi', [
+          'ngRoute',
+          'nvd3',
+          'vampUi.services.auth',
+          'vampUi.services.apiClient',
+          'vampUi.services.executionDataExtract',
+          'vampUi.services.executionHelper',
+          'vampUi.services.errorHandler',
+          'vampUi.models.configuration',
+          'vampUi.models.execution',
+          'vampUi.models.resource',
+          'vampUi.models.workload',
+          'vampUi.directives.graphs.cpuUsageHistogram',
+          'vampUi.directives.graphs.networkSpeedsHistogram',
+          'vampUi.directives.graphs.histogramStats',
+          'vampUi.directives.statisticsTabs',
+          'vampUi.directives.tables.networkCounters',
+          'vampUi.directives.textareaTail',
+          'vampUi.filters.bytes',
+          'vampUi.views.execute',
+          'vampUi.views.executions',
+          'vampUi.views.login',
+          'vampUi.views.resources',
+          'vampUi.views.results',
+          'vampUi.views.sample',
+          'vampUi.views.welcome',
+          'vampUi.views.workload',
+          'vampUi.config',
       ])
+      .config(['$routeProvider', defaultRoute])
+      .run([
+          '$rootScope',
+          '$route',
+          'AuthService',
+          'ErrorHandlerService',
+          '$location',
+          runFunction
+      ])
+        .controller('ErrorController', [
+            '$scope',
+            'ErrorHandlerService',
+            ErrorController
+        ])
+        .factory('$exceptionHandler', [
+        'ErrorHandlerService',
+        ExceptionHandler
+    ]);
 
-      .config(['$routeProvider', function($routeProvider) {
+    function defaultRoute($routeProvider) {
         $routeProvider.otherwise({redirectTo: '/start'});
-      }])
+    }
 
-      .run(['$rootScope', '$route', 'AuthService', '$location', function($rootScope, $route, AuthService, $location) {
-        $rootScope.$on('$routeChangeStart', function(event, curRoute, prevRoute) {
-          if (!AuthService.isLoggedIn() && !$location.path().startsWith('/login')) {
-            $location.path('/login' + $location.path());
-          }
-        });
-        $rootScope.$on("$routeChangeSuccess", function(event, currentRoute, previousRoute){
+    function runFunction ($rootScope, $route, AuthService, ErrorHandlerService, $location) {
+        $rootScope.$on('$routeChangeStart', function (event, curRoute,
+                                                      prevRoute) {
 
-          if (angular.isUndefined($route.current.title)) {
-            $rootScope.title = 'Vampires';
-          } else {
-            $rootScope.title = $route.current.title;
-          }
+            ErrorHandlerService.clearErrors();
+
+            if (!AuthService.isLoggedIn() &&
+                !$location.path().startsWith('/login')) {
+
+                $location.path('/login' + $location.path());
+            }
         });
-      }]);
+        $rootScope.$on("$routeChangeSuccess", function (event, currentRoute,
+                                                        previousRoute) {
+
+            if (angular.isUndefined($route.current.title)) {
+                $rootScope.title = 'Vampires';
+            } else {
+                $rootScope.title = $route.current.title;
+            }
+        });
+    }
+
+    function ExceptionHandler(ErrorHandlerService) {
+        return function handler(exception, cause) {
+            ErrorHandlerService.addError(exception);
+        };
+    }
+
+    function ErrorController($scope, ErrorHandlerService) {
+
+        $scope.$watch(function() {
+            return ErrorHandlerService.hasNewError;
+        }, function(newValue, oldValue) {
+            if (newValue) {
+                $scope.errors = ErrorHandlerService.getErrors();
+            }
+
+        });
+
+    }
 }());
