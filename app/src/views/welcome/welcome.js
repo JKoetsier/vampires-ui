@@ -8,7 +8,9 @@
     angular
         .module('vampUi.views.welcome', ['ngRoute'])
         .config(['$routeProvider', WelcomeRoutes])
-        .controller('WelcomeController', WelcomeController);
+        .controller('WelcomeController', [
+            WelcomeController
+        ]);
 
     /**
      * @namespace WelcomeRoutes

@@ -41,13 +41,13 @@
      * @desc Controller for the login view
      * @memberOf Views
      */
-    function LoginController($scope, Auth, $routeParams, $location) {
+    function LoginController($scope, AuthService, $routeParams, $location) {
 
         $scope.error = null;
 
         $scope.login = function login() {
             if ($scope.user && $scope.pass) {
-                Auth.logIn($scope.user, $scope.pass, function (result) {
+                AuthService.logIn($scope.user, $scope.pass, function (result) {
                     if (result) {
                         if ($routeParams.redirect) {
                             $location.path($routeParams.redirect);

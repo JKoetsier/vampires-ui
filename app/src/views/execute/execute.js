@@ -56,6 +56,7 @@
 
         $scope.execution = null;
         $scope.type = null;
+        $scope.settings = {};
 
         var pollingInterval;
 

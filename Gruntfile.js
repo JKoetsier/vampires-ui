@@ -36,19 +36,12 @@ imports.js.app = [
     'app/src/common/services/error_handler/error_handler.js',
     'app/src/config.js',
     'app/src/views/execute/execute.js',
-    'app/src/views/execute/execute_test.js',
     'app/src/views/resources/resources.js',
-    'app/src/views/resources/resources_test.js',
     'app/src/views/results/results.js',
-    'app/src/views/results/results_test.js',
     'app/src/views/sample/sample.js',
-    'app/src/views/sample/sample_test.js',
     'app/src/views/welcome/welcome.js',
-    'app/src/views/welcome/welcome_test.js',
     'app/src/views/workload/workload.js',
-    'app/src/views/workload/workload_test.js',
     'app/src/views/executions/executions.js',
-    'app/src/views/executions/executions_test.js',
     'app/src/views/login/login.js'
 ];
 
@@ -106,6 +99,13 @@ module.exports = function(grunt) {
                     angular: false,
                     console: false,
                     d3     : false,
+                    describe: false,
+                    inject: false,
+                    it: false,
+                    expect: false,
+                    module: false,
+                    beforeEach: false,
+                    spyOn: false
                 },
                 loopfunc: true,
                 esversion: 6
@@ -219,7 +219,24 @@ module.exports = function(grunt) {
                 }
             }
         },
-        clean: ['.tmp/']
+        clean: ['.tmp/'],
+        karma: {
+            unit: {
+                options: {
+                    basePath: './app/src',
+                    frameworks: ['jasmine'],
+                    singleRun: true,
+                    browsers: ['Chrome'],
+                    files: [
+                        './bower_components/angular/angular.js',
+                        './bower_components/angular-route/angular-route.js',
+                        './bower_components/angular-mocks/angular-mocks.js',
+                        './common/**/*.js',
+                        './views/**/*.js'
+                    ],
+                }
+            }
+        }
     }
     );
 
@@ -233,9 +250,15 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-html-build');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-karma');
+
+    grunt.registerTask('test', [
+        'jshint',
+        'karma'
+    ]);
 
     grunt.registerTask('build', [
-        'jshint',
+        'test',
         'copy',
         'less',
         'uglify',
@@ -246,7 +269,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('run', [
-        'jshint',
+        'test',
         'htmlbuild:dev',
         'connect',
         'watch:dev'

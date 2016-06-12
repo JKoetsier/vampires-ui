@@ -13,7 +13,7 @@
 
     /**
      * @namespace SampleRoutes
-     * @desc Routes for the sample view
+     * @desc Routes for the sample view. Gets redirected to execute
      * @memberOf Views
      */
     function SampleRoutes($routeProvider) {
