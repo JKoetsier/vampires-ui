@@ -43,7 +43,8 @@
      * @desc Controller for the results view
      * @memberOf Views
      */
-    function ResultsController($scope, ExecutionHelperService, Execution,
+    function ResultsController($scope,
+                               ExecutionHelperService, Execution,
                                Configuration, Resource, $routeParams,
                                ExecutionDataExtractService) {
 

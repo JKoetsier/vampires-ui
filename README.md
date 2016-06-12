@@ -8,12 +8,18 @@
 * Install Node.js and NPM. These are needed for dependency management.
 
         yum install nodejs npm
-
-    or
+        
+            or
+            
         dnf install nodejs npm
 
-    or
+            or
+            
         apt-get install nodejs npm
+        
+            or
+            
+        ...
 
 
 * In project root, do:

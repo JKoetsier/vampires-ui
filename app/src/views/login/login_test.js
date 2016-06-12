@@ -89,8 +89,6 @@
                 expect($scope.error).toBeDefined();
                 expect($location.path).not.toHaveBeenCalled();
             });
-
-
         });
     });
 }());
