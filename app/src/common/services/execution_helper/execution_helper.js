@@ -74,7 +74,6 @@
                 executions.push(exec);
 
                 cb(exec);
-
             });
         };
 

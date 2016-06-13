@@ -176,11 +176,6 @@
             });
         };
 
-        $scope.continueExecution = function continueExecution() {
-            $scope.execution.start(function (data) {
-                $scope.stopped = false;
-            });
-        };
 
         $scope.startExecution();
     }

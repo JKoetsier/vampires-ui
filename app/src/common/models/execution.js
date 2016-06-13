@@ -11,6 +11,7 @@
             'ApiClientService',
             'Workload',
             'Configuration',
+            '$q',
             ExecutionFactory
         ]);
 
@@ -19,7 +20,7 @@
      * @desc Execution model
      * @memberOf Models
      */
-    function ExecutionFactory(ApiClientService, Workload, Configuration) {
+    function ExecutionFactory(ApiClientService, Workload, Configuration, $q) {
 
         function Execution(workload, configuration, type) {
             this.configuration = configuration;

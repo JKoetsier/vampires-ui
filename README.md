@@ -28,6 +28,8 @@
 
         npm install
         grunt run
+  
+  This will start a local server on port 8080.
 
 * Navigate to http://localhost:8080 in your browser to load the user
   interface.

@@ -232,7 +232,8 @@ module.exports = function(grunt) {
                         './bower_components/angular-route/angular-route.js',
                         './bower_components/angular-mocks/angular-mocks.js',
                         './common/**/*.js',
-                        './views/**/*.js'
+                        './views/**/*.js',
+                        './*.js'
                     ],
                 }
             }
